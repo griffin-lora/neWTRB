@@ -1,6 +1,7 @@
 export interface Options {
 
-    stamper: StamperOptions
+    tools: Array<string>
+    assets: Array<string>
 
 }
 
@@ -12,10 +13,16 @@ export interface StamperOptions {
 
 export const options = {
 
-    stamper: {
+    tools: [
+
+        "Stamper"
+        
+    ],
+
+    assets: [
 
         
-        
-    } as StamperOptions
+
+    ]
 
 } as Options

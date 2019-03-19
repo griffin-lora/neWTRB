@@ -1,6 +1,5 @@
 import { Component } from "../Component"
 import { Workspace } from "rbx-services"
-import inspect from "rbx-inspect";
 
 export interface RenderProperties {
 
@@ -24,6 +23,16 @@ export class Render extends Component {
 
         }
     
+    }
+
+    update() {
+
+        if (this.model && this.properties) {
+
+            this.model.SetPrimaryPartCFrame(this.properties.cframe)
+
+        }
+        
     }
 
     model: Model | undefined

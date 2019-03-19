@@ -1,5 +1,5 @@
 import { RunService } from "rbx-services"
-import inspect from "rbx-inspect";
+import { Entity } from "./Entity"
 
 export interface ComponentProperties {
 
@@ -9,8 +9,10 @@ export interface ComponentProperties {
 
 export class Component {
 
-    constructor(componentClass: typeof Component, properties: ComponentProperties) {
+    constructor(componentClass: typeof Component, entity: Entity, properties: ComponentProperties) {
         
+        this.entity = entity
+
         const entries = Object.entries(componentClass.properties)
 
         entries.forEach(entry => {
@@ -48,6 +50,14 @@ export class Component {
         
 
     }
+
+    destroy() {
+
+
+
+    }
+
+    entity: Entity
 
     properties: ComponentProperties | unknown
 
