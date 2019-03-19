@@ -1,5 +1,6 @@
 import { Entity } from "../Entity"
 import { Render } from "../components/Render"
+import { ReplicatedStorage } from "rbx-services"
 
 export class World extends Entity {
 
@@ -7,7 +8,7 @@ export class World extends Entity {
 
         super()
 
-        this.addComponent(Render, {  })
+        this.addComponent(Render, { model: ReplicatedStorage.assets.map })
 
     }
 

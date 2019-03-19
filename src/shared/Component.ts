@@ -1,4 +1,5 @@
 import { RunService } from "rbx-services"
+import inspect from "rbx-inspect";
 
 export interface ComponentProperties {
 
@@ -8,13 +9,31 @@ export interface ComponentProperties {
 
 export class Component {
 
-    constructor(properties: ComponentProperties) {
+    constructor(componentClass: typeof Component, properties: ComponentProperties) {
+        
+        const entries = Object.entries(componentClass.properties)
+
+        entries.forEach(entry => {
+
+            const key = entry[0]
+            
+            if (!properties[key]) {
+
+                properties[key] = componentClass.properties[key]
+
+            }
+
+        })
 
         this.properties = properties
 
         this.start()
 
-        RunService.Stepped.Connect(this.update)
+        RunService.Stepped.Connect((time, step) => {
+
+            this.update(time, step)
+
+        })
 
     }
 
@@ -24,12 +43,14 @@ export class Component {
 
     }
 
-    update() {
+    update(time: number, step: number) {
 
         
 
     }
 
-    properties: ComponentProperties
+    properties: ComponentProperties | unknown
+
+    static properties: ComponentProperties
 
 }
