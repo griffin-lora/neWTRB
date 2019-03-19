@@ -11,16 +11,35 @@ export class Entity {
     addComponent(componentClass: typeof Component, properties: ComponentProperties) {
 
         const component = new componentClass(componentClass, this, properties)
-
-        this.components.push(component)
+        
+        this.components.push([componentClass, component])
 
         return component
 
     }
 
+    getComponent(componentClass: typeof Component) {
+
+        this.components.forEach(componentDatum => {
+
+            const otherComponentClass = componentDatum[0]
+            const component = componentDatum[1]
+
+            if (componentClass === otherComponentClass) {
+
+                return component
+
+            }
+
+        })
+
+    }
+
     destroy() {
 
-        this.components.forEach(component => {
+        this.components.forEach(componentDatum => {
+
+            const component = componentDatum[1]
 
             component.destroy()
 
@@ -28,6 +47,6 @@ export class Entity {
 
     }
 
-    components = new Array<Component>()
+    components = new Array<[typeof Component, Component]>()
 
 }
