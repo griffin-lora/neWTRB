@@ -9,11 +9,23 @@ class GameManager {
         
     }
 
-    createEntity() {
+    createEntity(entityClass: typeof Entity | undefined) {
 
-        const entity = new Entity()
+        let entity
+        
+        if (entityClass) {
+
+            entity = new entityClass()
+
+        } else {
+
+            entity = new Entity()
+
+        }
 
         this.entities.push(entity)
+
+        return entity
         
     }
 

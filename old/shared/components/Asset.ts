@@ -3,7 +3,7 @@ import { Render } from "./Render"
 
 export interface AssetProperties {
 
-    
+    mode: string
 
 }
 
@@ -35,6 +35,6 @@ export class Asset extends Component {
 
     properties: AssetProperties | undefined
 
-    static properties = {  }
+    static properties = { mode: "none" }
 
 }

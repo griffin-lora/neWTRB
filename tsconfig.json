@@ -22,6 +22,8 @@
     },
     "typeAcquisition": {
       "enable": true
-    }
+    },
+    "jsx": "react",
+        "jsxFactory": "Roact.createElement"
   }
   

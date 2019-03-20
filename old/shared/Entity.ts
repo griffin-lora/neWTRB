@@ -20,6 +20,8 @@ export class Entity {
 
     getComponent(componentClass: typeof Component) {
 
+        let actualComponent
+
         this.components.forEach(componentDatum => {
 
             const otherComponentClass = componentDatum[0]
@@ -27,11 +29,21 @@ export class Entity {
 
             if (componentClass === otherComponentClass) {
 
-                return component
+                actualComponent = component
 
             }
 
         })
+
+        if (actualComponent) {
+
+            return actualComponent
+
+        } else {
+
+            throw "Component is not on entity."
+
+        }
 
     }
 
