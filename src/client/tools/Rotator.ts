@@ -1,10 +1,10 @@
 import { Tool } from "../Tool"
 
-export default class Stamper extends Tool {
+export default class Rotator extends Tool {
     
     constructor() {
 
-        super("stamper", "rbxassetid://59102781")
+        super("rotator", "rbxassetid://59103214")
 
     }
 

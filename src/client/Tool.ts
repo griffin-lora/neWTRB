@@ -1,44 +1,55 @@
+import { localManager } from "./localManager"
+import { Remote } from "./Remote"
+
 export class Tool {
 
-    constructor() {
-
+    constructor(name: string, image: string) {
         
+        this.name = name
+        this.remote = new Remote(name)
+        this.remote.event(this.event)
+        this.image = image
 
     }
 
     equip() {
 
-        this.onEquipped.forEach(event => {
+        this.equipped = true
+        
+        if (localManager.tool) {
 
-            event()
-            
-        })
+            localManager.tool.unequip()
+
+        }
+
+        localManager.tool = this
 
     }
 
     unequip() {
 
-        this.onUnequipped.forEach(event => {
+        this.equipped = false
 
-            event()
-            
-        })
+        localManager.tool = undefined
+        
+    }
+
+    event(...args: unknown[]) {
+
+
 
     }
 
-    equipped(event: Function) {
+    fire(...args: unknown[]) {
 
-        this.onEquipped.push(event)
-
-    }
-
-    unequipped(event: Function) {
-
-        this.onUnequipped.push(event)
+        this.remote.fire(...args)
 
     }
 
-    private onEquipped = new Array<Function>()
-    private onUnequipped = new Array<Function>()
+    equipped = false
+
+    name: string
+    remote: Remote
+    image: string
 
 }

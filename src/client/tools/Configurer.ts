@@ -1,10 +1,10 @@
 import { Tool } from "../Tool"
 
-export default class Stamper extends Tool {
+export default class Configurer extends Tool {
     
     constructor() {
 
-        super("stamper", "rbxassetid://59102781")
+        super("configurer", "http://www.roblox.com/asset/?id=59102714")
 
     }
 

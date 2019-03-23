@@ -1,3 +1,5 @@
+import { Area } from "./Area"
+
 class LocalManager {
 
     constructor() {
@@ -6,7 +8,41 @@ class LocalManager {
 
     }
 
-    
+    playerConnect() {
+
+
+
+    }
+
+    playerDisconnect() {
+
+
+
+    }
+
+    place() {
+
+
+
+    }
+
+    addArea(area: Area) {
+
+        this.areas.push(area)
+
+    }
+
+    addAreas(areas: Array<Area>) {
+
+        areas.forEach(area => {
+
+            this.addArea(area)
+
+        })
+
+    }
+
+    areas = new Array<Area>()
 
 }
 
