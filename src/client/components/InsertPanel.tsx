@@ -104,28 +104,8 @@ export class InsertPanel extends Roact.Component {
 
         })
 
-        UserInputService.InputBegan.Connect((input, gameProcessedEvent) => {
-            
-            if (!gameProcessedEvent && input.KeyCode === Enum.KeyCode.Q) {
-                
-                if (props.stamper.mode === stamperMode.inserting) {
-
-                    props.stamper.mode = stamperMode.none
-
-                } else {
-
-                    props.stamper.mode = stamperMode.inserting
-
-                }
-
-            }
-
-        })
-
     }
 
     ref: Roact.Ref<Frame>
     
 }
-
-/**/

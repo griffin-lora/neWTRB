@@ -37,9 +37,9 @@ export default class Stamper extends Tool {
             if (!gameProcessedEvent && this.equipped && input.KeyCode === Enum.KeyCode.Q) {
                 
                 if (this.mode === stamperMode.inserting) {
-
+                    
                     this.mode = stamperMode.none
-
+                    
                 } else {
 
                     this.mode = stamperMode.inserting
