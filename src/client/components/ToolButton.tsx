@@ -11,60 +11,18 @@ export interface ToolButtonProps {
 
 export class ToolButton extends Roact.Component {
 
-    constructor(props: ToolButtonProps) {
+    constructor(props: object) {
 
-        super(props as Object)
+        super(props)
 
-        this.ref = Roact.createRef<TextButton>()
+        this.ref = Roact.createRef()
 
     }
 
     render() {
 
         const props = this.props as ToolButtonProps
-
-        let keyCode: Enum.KeyCode
-
-        if (props.id === 1) {
-            keyCode = Enum.KeyCode.One
-        } else if (props.id === 2) {
-            keyCode = Enum.KeyCode.Two
-        } else if (props.id === 3) {
-            keyCode = Enum.KeyCode.Three
-        } else if (props.id === 4) {
-            keyCode = Enum.KeyCode.Four
-        } else if (props.id === 5) {
-            keyCode = Enum.KeyCode.Five
-        } else if (props.id === 6) {
-            keyCode = Enum.KeyCode.Six
-        } else if (props.id === 7) {
-            keyCode = Enum.KeyCode.Seven
-        } else if (props.id === 8) {
-            keyCode = Enum.KeyCode.Eight
-        } else if (props.id === 9) {
-            keyCode = Enum.KeyCode.Nine
-        } else if (props.id === 0) {
-            keyCode = Enum.KeyCode.Zero
-        }
-
-        UserInputService.InputBegan.Connect(input => {
-
-            if (input.KeyCode === keyCode) {
-
-                if (!props.tool.equipped) {
-
-                    props.tool.equip()
-
-                } else {
-
-                    props.tool.unequip()
-
-                }
-
-            }
-
-        })
-
+        
         return <textbutton Ref={this.ref} Name={tostring(props.id)} AnchorPoint={new Vector2(0.5, 0.5)} Size={new UDim2(0, 50, 0, 50)} Style={Enum.ButtonStyle.RobloxButton} Text="" Event={{
             MouseButton1Click: rbx => {
 
@@ -122,6 +80,50 @@ export class ToolButton extends Roact.Component {
             }
 
         })
+
+        let keyCode: Enum.KeyCode
+
+        if (props.id === 1) {
+            keyCode = Enum.KeyCode.One
+        } else if (props.id === 2) {
+            keyCode = Enum.KeyCode.Two
+        } else if (props.id === 3) {
+            keyCode = Enum.KeyCode.Three
+        } else if (props.id === 4) {
+            keyCode = Enum.KeyCode.Four
+        } else if (props.id === 5) {
+            keyCode = Enum.KeyCode.Five
+        } else if (props.id === 6) {
+            keyCode = Enum.KeyCode.Six
+        } else if (props.id === 7) {
+            keyCode = Enum.KeyCode.Seven
+        } else if (props.id === 8) {
+            keyCode = Enum.KeyCode.Eight
+        } else if (props.id === 9) {
+            keyCode = Enum.KeyCode.Nine
+        } else if (props.id === 0) {
+            keyCode = Enum.KeyCode.Zero
+        }
+
+        UserInputService.InputBegan.Connect((input, gameProcessedEvent) => {
+
+            if (!gameProcessedEvent && input.KeyCode === keyCode) {
+
+                if (!props.tool.equipped) {
+
+                    props.tool.equip()
+
+                } else {
+
+                    props.tool.unequip()
+
+                }
+
+            }
+
+        })
+
+        
 
     }
 

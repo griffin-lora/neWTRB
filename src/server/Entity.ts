@@ -2,6 +2,6 @@ import { Component } from "./Component"
 
 export class Entity {
 
-    components = <Component>{}
+    components = new Map<typeof Component, Component>()
 
 }

@@ -15,6 +15,8 @@ export interface ComponentSetting {
 
 export interface EntitySetting {
 
+    name: string
+    displayName: string
     components: Array<ComponentSetting>
 
 }
@@ -38,9 +40,11 @@ export const settings = {
 
         {
 
+            name: "Brick",
+            displayName: "Brick",
             components: [
 
-                { name: "Model", props: { model: ReplicatedStorage.assets.brick } }
+                { name: "Render", props: { cframe: new CFrame(), size: new Vector3(), model: ReplicatedStorage.assets.brick } }
 
             ]
 
@@ -55,3 +59,21 @@ export const settings = {
     ]
 
 } as Settings
+
+export const getEntitySetting = (name: string) => {
+
+    let actualEntitySetting: EntitySetting | undefined
+    
+    settings.entities.forEach(entitySetting => {
+        
+        if (entitySetting.name === name) {
+            
+            actualEntitySetting = entitySetting
+
+        }
+        
+    })
+
+    return actualEntitySetting
+
+}

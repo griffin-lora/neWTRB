@@ -11,9 +11,9 @@ export interface ToolGuiProps {
 
 export class ToolGui extends Roact.Component {
 
-    constructor(props: ToolGuiProps) {
+    constructor(props: object) {
 
-        super(props as Object)
+        super(props)
 
     }
 
@@ -45,7 +45,7 @@ export class ToolGui extends Roact.Component {
 
         const gui = <screengui Name="toolGui" ResetOnSpawn={false}>
 
-            <frame BackgroundTransparency={1} Position={new UDim2(0, 0, 0.7, 0)} Size={new UDim2(1, 0, 0.3, 0)}>
+            <frame BackgroundTransparency={1} Position={new UDim2(0, 0, 0.75, 0)} Size={new UDim2(1, 0, 0.3, 0)}>
             
                 <uilistlayout SortOrder={Enum.SortOrder.LayoutOrder} Padding={new UDim(0, 0)} FillDirection={Enum.FillDirection.Horizontal} HorizontalAlignment={Enum.HorizontalAlignment.Center} VerticalAlignment={Enum.VerticalAlignment.Center}></uilistlayout>
 
@@ -56,12 +56,6 @@ export class ToolGui extends Roact.Component {
         </screengui>
 
         return gui
-
-    }
-
-    createToolButton(tool: Tool) {
-
-        
 
     }
 

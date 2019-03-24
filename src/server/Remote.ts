@@ -7,11 +7,11 @@ export class Remote {
     constructor(name: string) {
 
         this.name = name
-
-        remoteEvent.OnServerEvent.Connect((player, name: unknown, ...args) => {
-
+        
+        remoteEvent.OnServerEvent.Connect((player, name, ...args) => {
+            
             if (typeIs(name, "string") && name === this.name) {
-
+                
                 this.events.forEach(event => {
 
                     event(player, ...args)

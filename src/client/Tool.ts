@@ -7,7 +7,11 @@ export class Tool {
         
         this.name = name
         this.remote = new Remote(name)
-        this.remote.event(this.event)
+        this.remote.event((...args) => {
+
+            this.event(...args)
+
+        })
         this.image = image
 
     }
