@@ -35,7 +35,7 @@ export class ToolGui extends Roact.Component {
 
                 }
 
-                const toolButton = <ToolButton tool={tool} id={id}></ToolButton>
+                const toolButton = <ToolButton tool={tool} id={id}/>
                 
                 buttons.push(toolButton)
 
@@ -47,7 +47,7 @@ export class ToolGui extends Roact.Component {
 
             <frame BackgroundTransparency={1} Position={new UDim2(0, 0, 0.75, 0)} Size={new UDim2(1, 0, 0.3, 0)}>
             
-                <uilistlayout SortOrder={Enum.SortOrder.LayoutOrder} Padding={new UDim(0, 0)} FillDirection={Enum.FillDirection.Horizontal} HorizontalAlignment={Enum.HorizontalAlignment.Center} VerticalAlignment={Enum.VerticalAlignment.Center}></uilistlayout>
+                <uilistlayout SortOrder={Enum.SortOrder.LayoutOrder} Padding={new UDim(0, 0)} FillDirection={Enum.FillDirection.Horizontal} HorizontalAlignment={Enum.HorizontalAlignment.Center} VerticalAlignment={Enum.VerticalAlignment.Center}/>
 
                 {buttons}
 

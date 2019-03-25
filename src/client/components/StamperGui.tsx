@@ -28,8 +28,8 @@ export class StamperGui extends Roact.Component {
         let insertPanelOpen = true
 
         return <screengui Ref={this.ref} ResetOnSpawn={false} Enabled={false}>
-            <InsertPanel stamper={props.stamper}></InsertPanel>
-            <StamperPanel stamper={props.stamper}></StamperPanel>
+            <InsertPanel stamper={props.stamper}/>
+            <StamperPanel stamper={props.stamper}/>
             <frame Key="loadDialog" Visible={false} Position={new UDim2(0.5, -175, 0.5, -25)} Size={new UDim2(0, 350, 0, 50)} SizeConstraint={Enum.SizeConstraint.RelativeXX} Style={Enum.FrameStyle.RobloxRound}>
                 <textlabel Key="loadLabel" Text="Loading..." Position={new UDim2(0, 0, 0, -8)} Size={new UDim2(0, 155, 0.5, 36)} BackgroundTransparency={1} TextSize={36} TextColor3={Color3.fromRGB(248, 248, 248)} Font={Enum.Font.ArialBold}/>
             </frame>

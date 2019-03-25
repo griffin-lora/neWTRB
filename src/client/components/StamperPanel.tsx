@@ -53,15 +53,7 @@ export class StamperPanel extends Roact.Component {
                 <textbutton Key="partsButton" Text="" ZIndex={3} Position={new UDim2(0, 45, 0, -6)} Size={new UDim2(0, 45, 0, 45)} Style={Enum.ButtonStyle.RobloxButton} Selected={true} TextColor3={Color3.fromRGB(255, 255, 255)} TextSize={14} Font={Enum.Font.ArialBold} Event={{
                     MouseButton1Click: rbx => {
 
-                        if (props.stamper.mode === stamperMode.inserting) {
-
-                            props.stamper.mode = stamperMode.none
-
-                        } else {
-
-                            props.stamper.mode = stamperMode.inserting
-
-                        }
+                        props.stamper.inserting = !props.stamper.inserting
 
                     }
                 }}>
@@ -89,7 +81,7 @@ export class StamperPanel extends Roact.Component {
 
         RunService.RenderStepped.Connect(() => {
 
-            partsButton.Selected = props.stamper.mode === stamperMode.inserting
+            partsButton.Selected = props.stamper.inserting
 
         })
 

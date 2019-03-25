@@ -36,15 +36,7 @@ export default class Stamper extends Tool {
             
             if (!gameProcessedEvent && this.equipped && input.KeyCode === Enum.KeyCode.Q) {
                 
-                if (this.mode === stamperMode.inserting) {
-                    
-                    this.mode = stamperMode.none
-                    
-                } else {
-
-                    this.mode = stamperMode.inserting
-
-                }
+                this.inserting = !this.inserting
 
             }
 
@@ -67,7 +59,7 @@ export default class Stamper extends Tool {
     startPlacing(previewSetting: EntitySetting) {
         
         this.preview = new Preview(this, previewSetting)
-        this.placing = true
+        this.inserting = false
         this.mode = stamperMode.placing
 
     }
@@ -78,8 +70,8 @@ export default class Stamper extends Tool {
 
     }
 
-    mode = stamperMode.inserting
-    placing = false
+    mode = stamperMode.placing
+    inserting = true
     preview: Preview | undefined
     gui: Roact.Element
 

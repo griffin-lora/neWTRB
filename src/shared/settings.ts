@@ -48,6 +48,18 @@ export const settings = {
 
             ]
 
+        },
+
+        {
+
+            name: "GrassLongWedge",
+            displayName: "GrassLongWedge",
+            components: [
+
+                { name: "Render", props: { cframe: new CFrame(), size: new Vector3(), model: ReplicatedStorage.assets.GrassLongWedge } }
+
+            ]
+
         }
 
     ],

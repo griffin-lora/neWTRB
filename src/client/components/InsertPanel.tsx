@@ -29,7 +29,7 @@ export class InsertPanel extends Roact.Component {
             <frame Key="itemsFrame" Position={new UDim2(0.24, 0, 0.085, 0)} Size={new UDim2(0.54, 0, 0.8, 0)} ClipsDescendants={true} BorderSizePixel={0} BackgroundTransparency={1}>
                 <textbutton Size={new UDim2(0, 100, 0, 100)} Event={{
                     MouseButton1Click: () => {
-                        props.stamper.startPlacing(settings.entities[0])
+                        props.stamper.startPlacing(settings.entities[1])
                     }
                 }}/>
                 <frame Key="scrollFrame" Size={new UDim2(1, 0, 1, 0)} BorderSizePixel={0} BackgroundTransparency={1} BackgroundColor3={Color3.fromRGB(255, 255, 255)}>
@@ -88,13 +88,13 @@ export class InsertPanel extends Roact.Component {
 
         RunService.RenderStepped.Connect(() => {
             
-            if (props.stamper.mode === stamperMode.inserting && !open) {
+            if (props.stamper.inserting && !open) {
 
                 insertPanel.TweenPosition(new UDim2(0.2, 2, 0.1, 24), Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, 0.35, true)
 
                 open = true
     
-            } else if ((props.stamper.mode === stamperMode.none || props.stamper.mode === stamperMode.placing) && open) {
+            } else if (!props.stamper.inserting && open) {
     
                 insertPanel.TweenPosition(new UDim2(0.2, 2, 1, 24), Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, 0.35, true)
 
