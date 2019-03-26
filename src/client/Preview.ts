@@ -1,11 +1,10 @@
 import { EntitySetting, ComponentSetting } from "../shared/settings"
-import { RunService, Players, Workspace } from "rbx-services"
+import { RunService, Workspace, ReplicatedStorage } from "rbx-services"
 import Stamper from "./tools/Stamper"
-const player = Players.LocalPlayer as Player
+import { mouse } from "./player"
+const JointsService = game.GetService("JointsService")
 const camera = Workspace.CurrentCamera
-const mouse = player.GetMouse() as Mouse
-const parent = script.Parent as Instance
-const previewMathModule = parent.previewMath as ModuleScript
+const previewMathModule = ReplicatedStorage.client.previewMath as ModuleScript
 
 export interface PreviewMath {
 
@@ -71,21 +70,52 @@ export class Preview {
 
             this.model = props.model.Clone()
             this.model.Parent = Workspace
+            this.model.GetDescendants().forEach(descendant => {
+
+                if (descendant.IsA("BasePart")) {
+
+                    descendant.CanCollide = false
+                    
+                    if (descendant.Transparency !== 1) {
+                        
+                        descendant.Transparency = 0.7
+
+                    }
+
+                } else if (descendant.IsA("Texture")) {
+
+                    if (descendant.Transparency !== 1) {
+
+                        descendant.Transparency = 0.7
+
+                    }
+
+                }
+
+            })
             
             mouse.TargetFilter = this.model
-            RunService.RenderStepped.Connect(() => {
+            this.moveConnection = RunService.RenderStepped.Connect(() => {
 
                 this.setCframe(this.getHitCframe())
                 
                 if (this.model) {
-
-                    if (stamper.equipped) {
+                    
+                    if (stamper.equipped && !stamper.inserting) {
 
                         this.model.Parent = Workspace
+
+                        const primaryPart = this.model.PrimaryPart as BasePart
+                        
+                        JointsService.SetJoinAfterMoveInstance(primaryPart)
+                        JointsService.SetJoinAfterMoveTarget(mouse.Target)
+                        JointsService.ShowPermissibleJoints()
 
                     } else {
 
                         this.model.Parent = undefined
+
+                        JointsService.ClearJoinAfterMoveJoints()
 
                     }
 
@@ -111,9 +141,9 @@ export class Preview {
 
             })
 
-            mouse.Button1Up.Connect(() => {
+            this.buttonConnection = mouse.Button1Up.Connect(() => {
                 
-                if (stamper.equipped) {
+                if (stamper.equipped && !stamper.inserting) {
 
                     stamper.place(previewSetting, this.getHitCframe())
                     
@@ -151,9 +181,20 @@ export class Preview {
 
     destroy() {
 
+        if (this.moveConnection && this.buttonConnection && this.model) {
 
+            this.moveConnection.Disconnect()
+            this.buttonConnection.Disconnect()
+            this.model.Destroy()
+            JointsService.ClearJoinAfterMoveJoints()
+
+        }
 
     }
+
+    moveConnection: RBXScriptConnection | undefined
+    buttonConnection: RBXScriptConnection | undefined
+    
 /*
     getCollisions() {
 
@@ -379,7 +420,7 @@ export class Preview {
     getHitCframe() {
 
         if (this.model) {
-            
+
             const primaryPart = this.model.PrimaryPart as BasePart
 
             return previewMath.findConfigAtMouseTarget([primaryPart])

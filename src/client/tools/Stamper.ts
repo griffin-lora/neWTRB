@@ -5,9 +5,7 @@ import { Players, UserInputService, RunService } from "rbx-services"
 import { stamperMode } from "../enum"
 import { EntitySetting } from "../../shared/settings"
 import { Preview } from "../Preview"
-const player = Players.LocalPlayer as Player
-const playerGui = player.PlayerGui as PlayerGui
-const mouse = player.GetMouse() as Mouse
+import { playerGui, mouse } from "../player"
 
 export default class Stamper extends Tool {
     
@@ -19,7 +17,7 @@ export default class Stamper extends Tool {
         Roact.mount(this.gui, playerGui)
         
         RunService.RenderStepped.Connect(() => {
-
+            
             if (this.equipped && this.mode === stamperMode.placing) {
 
                 mouse.Icon = "rbxassetid://66887745"
@@ -57,6 +55,12 @@ export default class Stamper extends Tool {
     }
 
     startPlacing(previewSetting: EntitySetting) {
+
+        if (this.preview) {
+
+            this.preview.destroy()
+
+        }
         
         this.preview = new Preview(this, previewSetting)
         this.inserting = false
@@ -70,7 +74,7 @@ export default class Stamper extends Tool {
 
     }
 
-    mode = stamperMode.placing
+    mode = stamperMode.none
     inserting = true
     preview: Preview | undefined
     gui: Roact.Element

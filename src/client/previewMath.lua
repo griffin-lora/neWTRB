@@ -20,10 +20,10 @@ function getBoundingBox2(partOrModel)
         if part1:IsA("Flag") then part1 = partOrModel:FindFirstChild("Part") if not part1 then return end end
         for i, object in pairs(partOrModel:GetChildren()) do
             if (object:IsA("Part") or object:IsA("WedgePart") or object:IsA("CornerWedgePart") or object:IsA("TrussPart")) then
-                boxMinInWorld = object.CFrame:pointToWorldSpace(-0.5 * object.Size)
-                boxMinInPart1 = part1.CFrame:pointToObjectSpace(boxMinInWorld)
-                boxMaxInWorld = object.CFrame:pointToWorldSpace(0.5 * object.Size)
-                boxMaxInPart1 = part1.CFrame:pointToObjectSpace(boxMaxInWorld)
+                local boxMinInWorld = object.CFrame:pointToWorldSpace(-0.5 * object.Size)
+                local boxMinInPart1 = part1.CFrame:pointToObjectSpace(boxMinInWorld)
+                local boxMaxInWorld = object.CFrame:pointToWorldSpace(0.5 * object.Size)
+                local boxMaxInPart1 = part1.CFrame:pointToObjectSpace(boxMaxInWorld)
 
                 local minX = minVec.x
                 local minY = minVec.y
@@ -79,11 +79,11 @@ function getBoundingBox2(partOrModel)
     local justifyValue = partOrModel:FindFirstChild("Justification")
     if justifyValue ~= nil then
         -- find the multiple of 4 that contains the model
-        justify = justifyValue.Value
-        two = Vector3.new(2, 2, 2)
-        actualBox = maxVec - minVec - Vector3.new(0.01, 0.01, 0.01)
-        containingGridBox = Vector3.new(4 * math.ceil(actualBox.x/4), 4 * math.ceil(actualBox.y/4), 4 * math.ceil(actualBox.z/4))
-        adjustment = containingGridBox - actualBox
+        local justify = justifyValue.Value
+        local two = Vector3.new(2, 2, 2)
+        local actualBox = maxVec - minVec - Vector3.new(0.01, 0.01, 0.01)
+        local containingGridBox = Vector3.new(4 * math.ceil(actualBox.x/4), 4 * math.ceil(actualBox.y/4), 4 * math.ceil(actualBox.z/4))
+        local adjustment = containingGridBox - actualBox
         minVec = minVec - 0.5 * adjustment * justify
         maxVec = maxVec + 0.5 * adjustment * (two - justify)
     end
@@ -221,6 +221,7 @@ function findConfigAtMouseTarget(partsTable)
 
 
     local targetRefPointInTarget
+    local insertRefPointInInsert
     local clampToSurface
 
     if getClosestAlignedWorldDirection(targetVectorInWorld) == 0 then

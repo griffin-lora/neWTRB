@@ -1,9 +1,7 @@
-import { Players } from "rbx-services"
 import * as Roact from "rbx-roact"
 import { Tool } from "./Tool"
 import { ToolGui } from "./components/ToolGui"
-const player = Players.LocalPlayer as Player
-const playerGui = player.PlayerGui as PlayerGui
+import { playerGui } from "./player"
 
 
 class LocalManager {

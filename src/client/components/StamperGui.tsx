@@ -2,8 +2,8 @@ import * as Roact from "rbx-roact"
 import { RunService } from "rbx-services"
 import { Tool } from "../Tool"
 import Stamper from "../tools/Stamper"
-import { InsertPanel } from "./InsertPanel";
-import { StamperPanel } from "./StamperPanel";
+import { InsertPanel } from "./InsertPanel"
+import { StamperPanel } from "./StamperPanel"
 
 export interface StamperGuiProps {
 

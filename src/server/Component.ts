@@ -16,15 +16,15 @@ export class Component {
         
     }
 
-    start() {
-
-
-
-    }
-
     update() {
 
         
+
+    }
+
+    destroy() {
+
+
 
     }
 

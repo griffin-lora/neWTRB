@@ -66,7 +66,9 @@ export const settings = {
 
     tools: [
 
-        { name: "Stamper" }
+        { name: "Stamper" },
+        { name: "Deleter" },
+        { name: "Rotator" }
 
     ]
 

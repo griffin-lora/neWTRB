@@ -1,6 +1,6 @@
-import { Tool } from "../Tool"
+import { Selector } from "./Selector"
 
-export default class Rotator extends Tool {
+export default class Rotator extends Selector {
     
     constructor() {
 
@@ -17,6 +17,16 @@ export default class Rotator extends Tool {
     unequip() {
 
         super.unequip()
+
+    }
+
+    click(model: Model) {
+
+        super.click(model)
+
+        const entityId = model.entityId.Value
+        
+        this.fire(entityId)
 
     }
 

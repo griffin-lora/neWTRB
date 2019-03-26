@@ -1,21 +1,24 @@
 import { ToolGui } from "./components/ToolGui"
 import { Tool } from "./Tool"
 import * as Roact from "rbx-roact"
-import { Players, StarterGui } from "rbx-services"
-import Stamper from "./tools/Stamper"
-import Deleter from "./tools/Deleter"
+import { Players, StarterGui, ReplicatedStorage } from "rbx-services"
 import { localManager } from "./localManager"
-import Rotator from "./tools/Rotator"
-import Configurer from "./tools/Configurer"
-import Wirer from "./tools/Wirer"
+import { settings } from "../shared/settings"
+import { Export } from "../shared/Export"
+const tools = ReplicatedStorage.client.tools
 
 StarterGui.SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
 
-localManager.addTool(new Stamper())
-localManager.addTool(new Deleter())
-localManager.addTool(new Rotator())
-localManager.addTool(new Configurer())
-localManager.addTool(new Wirer())
+settings.tools.forEach(toolSetting => {
+
+    const toolModule = tools[toolSetting.name] as ModuleScript
+    const toolExport = require(toolModule) as Export
+    const toolClass = toolExport._default as typeof Tool
+
+    const tool = localManager.addTool(new toolClass("", ""))
+
+})
+
 localManager.renderTools()
 
 Players.LocalPlayer.CharacterAdded.Connect(character => {
