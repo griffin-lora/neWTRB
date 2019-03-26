@@ -2,4 +2,7 @@ node_modules
 modules
 out
 package-lock.json
+package.json
 rojo.json
+tsconfig.json
+include
