@@ -10,9 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "rbx-datastore2": "^1.0.2",
     "rbx-inspect": "^1.0.4",
     "rbx-roact": "^0.1.11",
     "rbx-services": "^1.0.21",
-    "rbx-types": "^1.0.157"
+    "rbx-types": "^1.0.160"
   }
 }

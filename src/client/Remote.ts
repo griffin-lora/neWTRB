@@ -9,7 +9,7 @@ export class Remote {
         this.name = name
 
         remoteEvent.OnClientEvent.Connect((name: unknown, ...args) => {
-
+            
             if (typeIs(name, "string") && name === this.name) {
 
                 this.events.forEach(event => {

@@ -1,5 +1,8 @@
 import { Tool } from "../Tool"
 import { localManager } from "../localManager"
+import { settings } from "../../shared/settings"
+import { globalManager } from "../../shared/globalManager"
+import Render, { RenderProps } from "../components/Render"
 
 export default class Deleter extends Tool {
     
@@ -17,7 +20,49 @@ export default class Deleter extends Tool {
             
             const entity = localManager.getEntityById(id)
 
-            localManager.destroyEntity(entity)
+            const render = entity.components.get(Render)
+
+            if (render) {
+
+                const props = render.props as RenderProps
+
+                let valid = true
+
+                if (settings.restricted) {
+
+                    const area = localManager.getAreaByPlayer(player)
+
+                    valid = globalManager.isInArea(area.model, props.cframe)
+
+                }
+
+                if (valid) {
+
+                    localManager.destroyEntity(entity)
+
+                    if (settings.restricted) {
+
+                        const area = localManager.getAreaByPlayer(player)
+                        
+                        area.save()
+
+                    }
+
+                } else {
+
+                    throw "Attempted to delete outside of building area."
+
+                }
+
+            } else {
+
+                throw `Render component is not on entity. Entity is: ${ id }`
+
+            }
+
+        } else {
+
+            throw "Attempted to fire remote with invalid types."
 
         }
 

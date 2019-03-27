@@ -1,6 +1,8 @@
 import { Tool } from "../Tool"
 import { RunService, Workspace } from "rbx-services"
 import { mouse, playerGui } from "../player"
+import { localManager } from "../localManager"
+import { globalManager } from "../../shared/globalManager"
 const entities = Workspace.entities
 
 export class Selector extends Tool {
@@ -40,7 +42,25 @@ export class Selector extends Tool {
                 
                 if (model && model.IsA("Model") && model.Parent === entities) {
 
-                    this.selected = model
+                    let valid = true
+
+                    const primaryPart = model.PrimaryPart as BasePart
+
+                    if (localManager.area) {
+
+                        valid = globalManager.isInArea(localManager.area, primaryPart.CFrame)
+
+                    }
+
+                    if (valid) {
+
+                        this.selected = model
+
+                    } else {
+
+                        this.selected = undefined
+
+                    }
 
                 } else {
 

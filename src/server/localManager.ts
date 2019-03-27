@@ -1,13 +1,16 @@
 import { Area } from "./Area"
-import { EntitySetting, ComponentSetting } from "../shared/settings"
+import { EntitySetting, ComponentSetting, settings } from "../shared/settings"
 import { Entity } from "./Entity"
-import { ReplicatedStorage, HttpService } from "rbx-services"
+import { ReplicatedStorage, HttpService, ServerScriptService } from "rbx-services"
 import { Export } from "../shared/Export"
 import { Component } from "./Component"
 import { Unknown } from "../shared/Unknown"
 import Core, { CoreProps } from "./components/Core"
+import { Remote } from "./Remote"
+import { Tool } from "./Tool"
+const tools = ServerScriptService.server.tools
 
-const components = ReplicatedStorage.server.components
+const components = ServerScriptService.server.components
 
 class LocalManager {
 
@@ -17,21 +20,32 @@ class LocalManager {
 
     }
 
-    playerConnect() {
+    playerConnect(player: Player) {
 
+        let found = false
 
+        this.areas.forEach(area => {
+
+            if (!found && !area.player) {
+
+                found = true
+
+                area.player = player
+                area.load()
+
+                this.joinRemote.fire(player, area.model)
+
+            }
+
+        })
 
     }
 
-    playerDisconnect() {
+    playerDisconnect(player: Player) {
 
+        const area = this.getAreaByPlayer(player)
 
-
-    }
-
-    place() {
-
-
+        area.player = undefined
 
     }
 
@@ -41,9 +55,35 @@ class LocalManager {
 
     }
 
+    getAreaByPlayer(player: Player): Area {
+
+        let actualArea = undefined
+
+        this.areas.forEach(area => {
+
+            if (player === area.player) {
+
+                actualArea = area
+
+            }
+
+        })
+
+        if (actualArea) {
+
+            return actualArea
+
+        } else {
+
+            throw `Invalid player. Player is ${ player.Name }`
+
+        }
+
+    }
+
     createEntity(entitySetting: EntitySetting) {
 
-        const entity = new Entity()
+        const entity = new Entity({ name: entitySetting.name, displayName: entitySetting.displayName, components: new Array<ComponentSetting>() } as EntitySetting)
 
         this.entities.push(entity)
         
@@ -73,6 +113,8 @@ class LocalManager {
             props[key] = value
 
         })
+
+        entity.entitySetting.components.push({ name: componentSetting.name, props: props })
 
         const componentModule = components[componentSetting.name] as ModuleScript
         const componentExport = require(componentModule) as Export
@@ -110,7 +152,7 @@ class LocalManager {
 
         } else {
 
-            throw `Invalid entity id. Id is ${id}`
+            throw `Invalid entity id. Id is ${ id }`
 
         }
 
@@ -136,9 +178,25 @@ class LocalManager {
 
     }
 
+    requireTools() {
+        
+        settings.tools.forEach(toolSetting => {
+
+            const toolModule = tools[toolSetting.name] as ModuleScript
+            const toolExport = require(toolModule) as Export
+            const toolClass = toolExport._default as typeof Tool
+
+            new toolClass("")
+
+        })
+
+    }
+
     entities = new Array<Entity>()
 
     areas = new Array<Area>()
+
+    joinRemote = new Remote("join")
 
 }
 

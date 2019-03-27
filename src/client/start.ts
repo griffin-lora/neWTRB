@@ -19,10 +19,19 @@ settings.tools.forEach(toolSetting => {
 
 })
 
+// Disabled while roblox-ts still has the type import bug
+// localManager.requireTools()
+
 localManager.renderTools()
 
 Players.LocalPlayer.CharacterAdded.Connect(character => {
 
-    (character.WaitForChild("HumanoidRootPart") as BasePart).CFrame = new CFrame(24, 53.9, -88)
+    if (localManager.area) {
+
+        const prim = localManager.area.PrimaryPart as BasePart
+
+        (character.WaitForChild("HumanoidRootPart") as BasePart).CFrame = prim.CFrame.add(new Vector3(0, 10, 0))
+
+    }
 
 })

@@ -6,6 +6,8 @@ import { stamperMode } from "../enum"
 import { EntitySetting } from "../../shared/settings"
 import { Preview } from "../Preview"
 import { playerGui, mouse } from "../player"
+import { localManager } from "../localManager"
+import { globalManager } from "../../shared/globalManager"
 
 export default class Stamper extends Tool {
     
@@ -69,8 +71,20 @@ export default class Stamper extends Tool {
     }
     
     place(entitySetting: EntitySetting, cframe: CFrame) {
+
+        let valid = true
+
+        if (localManager.area) {
+
+            valid = globalManager.isInArea(localManager.area, cframe)
+
+        }
         
-        this.fire(entitySetting.name, cframe)
+        if (valid) {
+
+            this.fire(entitySetting.name, cframe)
+
+        }
 
     }
 

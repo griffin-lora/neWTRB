@@ -106,9 +106,11 @@ export class Preview {
                         this.model.Parent = Workspace
 
                         const primaryPart = this.model.PrimaryPart as BasePart
+
+                        const target = mouse.Target as Instance
                         
                         JointsService.SetJoinAfterMoveInstance(primaryPart)
-                        JointsService.SetJoinAfterMoveTarget(mouse.Target)
+                        JointsService.SetJoinAfterMoveTarget(target)
                         JointsService.ShowPermissibleJoints()
 
                     } else {

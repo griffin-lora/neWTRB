@@ -28,6 +28,8 @@ export default class Deleter extends Selector {
         
         this.fire(entityId)
 
+        model.Destroy()
+
     }
 
 }

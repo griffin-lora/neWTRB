@@ -11,10 +11,30 @@ export class Remote {
         remoteEvent.OnServerEvent.Connect((player, name, ...args) => {
             
             if (typeIs(name, "string") && name === this.name) {
+
+                [...args].forEach(arg => {
+
+                    if (typeIs(arg, "table") || typeIs(arg, "userdata")) {
+
+                        player.Kick("Attempted to give the server a table or userdatum.")
+
+                    }
+
+                })
                 
                 this.events.forEach(event => {
 
-                    event(player, ...args)
+                    const [ success, message ] = pcall(() => {
+                        
+                        event(player, ...args)
+
+                    })
+                    
+                    if (!success) {
+
+                        player.Kick(`Caused a server error. Error is: ${ message }`)
+
+                    }
         
                 })
                 
