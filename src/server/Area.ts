@@ -6,6 +6,8 @@ import { globalManager } from "../shared/globalManager"
 import * as DataStore2 from "rbx-datastore2"
 import inspect from "rbx-inspect"
 import { Unknown } from "../shared/Unknown"
+import Core, { CoreProps } from "./components/Core"
+import { Entity } from "./Entity"
 
 const model = ReplicatedStorage.assets.area
 const areas = Workspace.areas
@@ -273,6 +275,38 @@ export class Area {
 
         }
         
+    }
+
+    clear() {
+
+        const areaEntities = new Array<Entity>()
+
+        localManager.entities.forEach(entity => {
+
+            const core = entity.components.get(Core)
+            const render = entity.components.get(Render)
+            
+            if (core && render) {
+                
+                const coreProps = core.props as CoreProps
+                const renderProps = render.props as RenderProps
+                
+                if (globalManager.isInArea(this.model, renderProps.cframe)) {
+                    
+                    areaEntities.push(entity)
+
+                }
+
+            }
+
+        })
+
+        areaEntities.forEach(entity => {
+
+            localManager.destroyEntity(entity)
+
+        })
+
     }
 
     model: Model

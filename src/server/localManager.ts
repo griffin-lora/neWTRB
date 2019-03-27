@@ -44,8 +44,10 @@ class LocalManager {
     playerDisconnect(player: Player) {
 
         const area = this.getAreaByPlayer(player)
-
+        
         area.player = undefined
+        
+        area.clear()
 
     }
 

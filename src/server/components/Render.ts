@@ -56,6 +56,10 @@ export default class Render extends Component {
 
         super.destroy()
 
+        const props = this.props as RenderProps
+        
+        props.cframe = props.cframe.add(new Vector3(0, 10, 0))
+
         this.model.Destroy()
         
     }

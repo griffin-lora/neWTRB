@@ -27,18 +27,38 @@ export class InsertPanel extends Roact.Component {
 
         return <frame Ref={this.ref} Key="insertPanel" Active={true} Position={new UDim2(0.2, 2, 0.1, 24)} Size={new UDim2(0.6, -20, 0.64, 0)} Style={Enum.FrameStyle.RobloxRound}>
             <frame Key="itemsFrame" Position={new UDim2(0.24, 0, 0.085, 0)} Size={new UDim2(0.54, 0, 0.8, 0)} ClipsDescendants={true} BorderSizePixel={0} BackgroundTransparency={1}>
-                <textbutton Size={new UDim2(0, 100, 0, 100)} Event={{
-                    MouseButton1Click: () => {
-                        props.stamper.startPlacing(settings.entities[0])
-                    }
-                }}/>
-                <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
-                    MouseButton1Click: () => {
-                        props.stamper.startPlacing(settings.entities[1])
-                    }
-                }}/>
                 <frame Key="scrollFrame" Size={new UDim2(1, 0, 1, 0)} BorderSizePixel={0} BackgroundTransparency={1} BackgroundColor3={Color3.fromRGB(255, 255, 255)}>
                     <uigridlayout CellPadding={new UDim2(0, 0, 0, 0)} CellSize={new UDim2(0, 64, 0, 64)}/>
+                    <textbutton Size={new UDim2(0, 100, 0, 100)} Event={{
+                        MouseButton1Click: () => {
+                            props.stamper.startPlacing(settings.entities[0])
+                        }
+                    }}/>
+                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
+                        MouseButton1Click: () => {
+                            props.stamper.startPlacing(settings.entities[1])
+                        }
+                    }}/>
+                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
+                        MouseButton1Click: () => {
+                            props.stamper.startPlacing(settings.entities[2])
+                        }
+                    }}/>
+                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
+                        MouseButton1Click: () => {
+                            props.stamper.startPlacing(settings.entities[3])
+                        }
+                    }}/>
+                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
+                        MouseButton1Click: () => {
+                            props.stamper.startPlacing(settings.entities[4])
+                        }
+                    }}/>
+                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
+                        MouseButton1Click: () => {
+                            props.stamper.startPlacing(settings.entities[5])
+                        }
+                    }}/>
                 </frame>
             </frame>
             <textbutton Key="cancelButton" Text="" Position={new UDim2(1, -32, 0, -2)} Size={new UDim2(0, 34, 0, 34)} Style={Enum.ButtonStyle.RobloxButtonDefault} TextSize={24} TextColor3={Color3.fromRGB(255, 255, 255)} Font={Enum.Font.ArialBold} Event={{
