@@ -9,6 +9,7 @@ export interface RenderProps {
     cframe: CFrame
     size: Vector3
     model: Model
+    anchored: boolean
 
 }
 
@@ -19,6 +20,7 @@ export default class Render extends Component {
         super(entity, props)
 
         this.model = props.model.Clone()
+        props.model = this.model
 
         const core = entity.components.get(Core)
         
@@ -45,8 +47,16 @@ export default class Render extends Component {
         const props = this.props as RenderProps
         
         if (this.model.PrimaryPart) {
-
-            this.model.SetPrimaryPartCFrame(props.cframe)
+            
+            if (props.anchored) {
+                
+                this.model.SetPrimaryPartCFrame(props.cframe)
+                
+            } else {
+                
+                props.cframe = this.model.GetPrimaryPartCFrame()
+                
+            }
 
         }
 
@@ -55,10 +65,6 @@ export default class Render extends Component {
     destroy() {
 
         super.destroy()
-
-        const props = this.props as RenderProps
-        
-        props.cframe = props.cframe.add(new Vector3(0, 10, 0))
 
         this.model.Destroy()
         

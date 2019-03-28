@@ -94,8 +94,8 @@ end
 
 
 function getTargetPartBoundingBox(targetPart)
-
-    if targetPart.Parent:FindFirstChild("RobloxModel") ~= nil then
+    
+    if targetPart.Parent:FindFirstChild("entityId") ~= nil then
         return getBoundingBox2(targetPart.Parent)
     else
         return getBoundingBox2(targetPart)

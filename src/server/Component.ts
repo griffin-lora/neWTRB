@@ -8,7 +8,7 @@ export class Component {
         this.entity = entity
         this.props = props
 
-        RunService.Stepped.Connect(() => {
+        this.updateConnection = RunService.Stepped.Connect(() => {
 
             this.update()
 
@@ -24,11 +24,14 @@ export class Component {
 
     destroy() {
 
-
+        this.exists = false
+        this.updateConnection.Disconnect()
 
     }
 
     entity: Entity
     props: object
+    updateConnection: RBXScriptConnection
+    exists = true
 
 }

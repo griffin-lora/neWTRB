@@ -31,22 +31,18 @@ export default class Stamper extends Tool {
             if (valid) {
                 
                 const entitySetting = getEntitySetting(name)
+
+                entitySetting.components.forEach(componentSetting => {
+
+                    if (componentSetting.name === "Render") {
+
+                        componentSetting.props.cframe = cframe
+
+                    }
+
+                })
                 
                 const entity = localManager.createEntity(entitySetting)
-
-                const render = entity.components.get(Render)
-
-                if (render) {
-
-                    const props = render.props as RenderProps
-
-                    props.cframe = cframe
-
-                } else {
-
-                    throw "Entity does not have Render component."
-
-                }
 
                 if (settings.restricted) {
 
