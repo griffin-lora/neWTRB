@@ -20,7 +20,6 @@ export default class Render extends Component {
         super(entity, props)
 
         this.model = props.model.Clone()
-        props.model = this.model
 
         const core = entity.components.get(Core)
         

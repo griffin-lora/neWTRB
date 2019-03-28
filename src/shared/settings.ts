@@ -42,7 +42,7 @@ export interface Settings {
 export const settings = {
 
     restricted: true,
-    dataStoreKey: "NEWTRB",
+    dataStoreKey: "NEWTRB_BUILD_1",
 
     entities: [
 

@@ -3,6 +3,9 @@ import { Entity } from "../Entity"
 import Render, { RenderProps } from "./Render"
 import { Workspace } from "rbx-services"
 
+const entities = Workspace.entities as Folder
+const map = Workspace.map as Folder
+
 export class Collision {
 
     constructor(part: BasePart, normal: Vector3) {
@@ -13,7 +16,7 @@ export class Collision {
         
         const ray = new Ray(position, direction)
 
-        const [ hitPart ] = Workspace.FindPartOnRay(ray, part.Parent)
+        const [ hitPart ] = Workspace.FindPartOnRayWithWhitelist(ray, [ entities, map ])
         
         this.hit = !!hitPart
         this.hitPart = hitPart
@@ -47,7 +50,7 @@ export default class Physics extends Component {
 
             const collisions = this.getCollisions()
 
-            const model = renderProps.model
+            const model = this.render.model
             const primaryPart = model.PrimaryPart as BasePart
             
             collisions.forEach(collision => {
@@ -116,7 +119,7 @@ export default class Physics extends Component {
 
             }*/
 
-            const model = renderProps.model
+            const model = this.render.model
             
             model.GetDescendants().forEach(descendant => {
 
@@ -143,10 +146,8 @@ export default class Physics extends Component {
         const collisions = new Array<Collision>()
 
         if (this.render) {
-            
-            const renderProps = this.render.props as RenderProps
 
-            const primaryPart = renderProps.model.PrimaryPart as BasePart
+            const primaryPart = this.render.model.PrimaryPart as BasePart
             
             collisions.push(new Collision(primaryPart, new Vector3(1, 0, 0)))
             collisions.push(new Collision(primaryPart, new Vector3(-1, 0, 0)))
