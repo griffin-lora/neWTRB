@@ -36,6 +36,12 @@ export class Remote {
 
     }
 
+    clear() {
+
+        this.events = new Array<Function>()
+
+    }
+
     name: string
 
     private events = new Array<Function>()

@@ -20,7 +20,7 @@ export default class Rotator extends Tool {
             
             const entity = localManager.getEntityById(id)
 
-            const render = entity.components.get(Render)
+            const render = entity.components.get(Render) as Render
 
             if (render) {
 
@@ -38,15 +38,34 @@ export default class Rotator extends Tool {
 
                 if (valid) {
 
-                    const eulerAngles = [ props.cframe.toEulerAnglesYXZ() ]
+                    // props.anchored = false
 
-                    const [ x, y, z ] = [ eulerAngles[0], eulerAngles[1], eulerAngles[2] ]
+                    props.model.GetDescendants().forEach(descendant => {
 
-                    if (typeIs(x, "number") && typeIs(y, "number") && typeIs(z, "number")) {
+                        if (descendant.IsA("BasePart")) {
 
-                        props.cframe = new CFrame(props.cframe.Position).mul(CFrame.Angles(x, y + math.rad(90), z))
+                            descendant.Anchored = true
 
-                    }
+                        }
+                        
+                    })
+
+                    const [ x, y, z ] = props.cframe.toEulerAnglesYXZ()
+                    
+                    props.cframe = new CFrame(props.cframe.Position).mul(CFrame.Angles(x, y + math.rad(90), z))
+                    render.model.SetPrimaryPartCFrame(props.cframe)
+
+                    /*props.model.GetDescendants().forEach(descendant => {
+
+                        if (descendant.IsA("BasePart")) {
+
+                            descendant.Anchored = false
+
+                        }
+                        
+                    })*/
+                    
+                    //props.anchored = true
                     
                     if (settings.restricted) {
 
@@ -58,19 +77,19 @@ export default class Rotator extends Tool {
 
                 } else {
 
-                    throw "Attempted to rotate outside of building area."
+                    throw "attempt to rotate outside of building area."
 
                 }
 
             } else {
 
-                throw "Entity does not have render component."
+                throw "missing render component."
 
             }
 
         } else {
 
-            throw "Attempted to fire remote with invalid types."
+            throw "attempt to fire remote with invalid types."
 
         }
 

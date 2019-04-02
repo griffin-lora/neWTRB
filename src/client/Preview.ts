@@ -73,7 +73,7 @@ export class Preview {
             this.model.GetDescendants().forEach(descendant => {
 
                 if (descendant.IsA("BasePart")) {
-
+                    
                     descendant.CanCollide = false
                     
                     if (descendant.Transparency !== 1) {
@@ -81,6 +81,8 @@ export class Preview {
                         descendant.Transparency = 0.7
 
                     }
+
+                    descendant.BottomSurface = Enum.SurfaceType.Smooth
 
                 } else if (descendant.IsA("Texture")) {
 

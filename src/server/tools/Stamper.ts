@@ -54,13 +54,13 @@ export default class Stamper extends Tool {
 
             } else {
 
-                throw "Attempted to place outside of building area."
+                throw "attempt to place outside of building area."
 
             }
 
         } else {
 
-            throw "Attempted to fire remote with invalid types."
+            throw "attempt to fire remote with invalid types."
 
         }
 

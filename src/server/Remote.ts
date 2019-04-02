@@ -9,14 +9,14 @@ export class Remote {
         this.name = name
         
         remoteEvent.OnServerEvent.Connect((player, name, ...args) => {
-            
+
             if (typeIs(name, "string") && name === this.name) {
 
                 [...args].forEach(arg => {
 
                     if (typeIs(arg, "table") || typeIs(arg, "userdata")) {
 
-                        player.Kick("Attempted to give the server a table or userdatum.")
+                        player.Kick("Attempt to give the server a table or userdatum.")
 
                     }
 
@@ -38,6 +38,10 @@ export class Remote {
         
                 })
                 
+            } else if (!typeIs(name, "string")) {
+
+                player.Kick("Attempt to give server invalid name.")
+
             }
 
         })

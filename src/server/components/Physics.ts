@@ -16,7 +16,21 @@ export class Collision {
         
         const ray = new Ray(position, direction)
 
-        const [ hitPart ] = Workspace.FindPartOnRayWithWhitelist(ray, [ entities, map ])
+        const ignoreList = new Array<Instance>()
+
+        ignoreList.push(part.Parent as Model)
+
+        Workspace.GetChildren().forEach(child => {
+            
+            if (child.IsA("PVInstance")) {
+
+                ignoreList.push(child)
+
+            }
+
+        })
+
+        const [ hitPart ] = Workspace.FindPartOnRayWithIgnoreList(ray, ignoreList)
         
         this.hit = !!hitPart
         this.hitPart = hitPart
@@ -30,7 +44,7 @@ export class Collision {
 
 export interface PhysicsProps {
 
-    
+    anchored: boolean
 
 }
 
@@ -76,10 +90,12 @@ export default class Physics extends Component {
                     weldConstraint.Part0 = descendant
                     weldConstraint.Part1 = primaryPart
                     weldConstraint.Parent = descendant
-                    
-                } else if (descendant.IsA("JointInstance")) {
 
-                    descendant.Destroy()
+                }
+
+                if (descendant.IsA("BasePart")) {
+
+                    descendant.Anchored = false
 
                 }
 
@@ -91,7 +107,7 @@ export default class Physics extends Component {
 
     update() {
         
-        if (this.render) {
+        /*if (this.render) {
             
             const renderProps = this.render.props as RenderProps
 
@@ -117,7 +133,7 @@ export default class Physics extends Component {
                     
                 }
 
-            }*/
+            }
 
             const model = this.render.model
             
@@ -131,7 +147,7 @@ export default class Physics extends Component {
 
             })
 
-        }
+        }*/
 
     }
 

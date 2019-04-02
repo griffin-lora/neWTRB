@@ -36,43 +36,7 @@ export class Selector extends Tool {
 
             }
             
-            if (this.equipped && target) {
-
-                const model = target.Parent
-                
-                if (model && model.IsA("Model") && model.Parent === entities) {
-
-                    let valid = true
-
-                    const primaryPart = model.PrimaryPart as BasePart
-
-                    if (localManager.area) {
-
-                        valid = globalManager.isInArea(localManager.area, primaryPart.CFrame)
-
-                    }
-
-                    if (valid) {
-
-                        this.selected = model
-
-                    } else {
-
-                        this.selected = undefined
-
-                    }
-
-                } else {
-
-                    this.selected = undefined
-
-                }
-
-            } else {
-
-                this.selected = undefined
-
-            }
+            this.selected = this.getSelected()
 
             this.selectionBox.Adornee = this.selected
 
@@ -105,6 +69,56 @@ export class Selector extends Tool {
     click(model: Model) {
 
 
+
+    }
+
+    static getSelected(selector: Tool) {
+
+        const target = mouse.Target
+        
+        if (selector.equipped && target) {
+
+            const model = target.Parent
+            
+            if (model && model.IsA("Model") && model.Parent === entities) {
+
+                let valid = true
+
+                const primaryPart = model.PrimaryPart as BasePart
+
+                if (localManager.area) {
+
+                    valid = globalManager.isInArea(localManager.area, primaryPart.CFrame)
+
+                }
+
+                if (valid) {
+
+                    return model
+
+                } else {
+
+                    return undefined
+
+                }
+
+            } else {
+
+                return undefined
+
+            }
+
+        } else {
+
+            return undefined
+
+        }
+
+    }
+
+    getSelected() {
+
+        return Selector.getSelected(this)
 
     }
 

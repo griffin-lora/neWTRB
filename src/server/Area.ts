@@ -56,6 +56,34 @@ export class Area {
 
     }
 
+    getEntities() {
+
+        const areaEntities = new Array<Entity>()
+
+        localManager.entities.forEach(entity => {
+
+            const core = entity.components.get(Core)
+            const render = entity.components.get(Render)
+            
+            if (core && render) {
+                
+                const coreProps = core.props as CoreProps
+                const renderProps = render.props as RenderProps
+                
+                if (globalManager.isInArea(this.model, renderProps.cframe)) {
+                    
+                    areaEntities.push(entity)
+
+                }
+
+            }
+
+        })
+
+        return areaEntities
+
+    }
+
     createSave() {
 
         const save = {
@@ -64,21 +92,11 @@ export class Area {
 
         } as Save
 
-        localManager.entities.forEach(entity => {
+        const areaEntities = this.getEntities()
 
-            const render = entity.components.get(Render)
+        areaEntities.forEach(entity => {
 
-            if (render) {
-
-                const props = render.props as RenderProps
-
-                if (globalManager.isInArea(this.model, props.cframe)) {
-
-                    save.entities.push(entity.entitySetting)
-
-                }
-
-            }
+            save.entities.push(entity.entitySetting)
 
         })
 
@@ -279,27 +297,7 @@ export class Area {
 
     clear() {
 
-        const areaEntities = new Array<Entity>()
-
-        localManager.entities.forEach(entity => {
-
-            const core = entity.components.get(Core)
-            const render = entity.components.get(Render)
-            
-            if (core && render) {
-                
-                const coreProps = core.props as CoreProps
-                const renderProps = render.props as RenderProps
-                
-                if (globalManager.isInArea(this.model, renderProps.cframe)) {
-                    
-                    areaEntities.push(entity)
-
-                }
-
-            }
-
-        })
+        const areaEntities = this.getEntities()
 
         areaEntities.forEach(entity => {
 

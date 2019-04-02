@@ -50,19 +50,19 @@ export default class Deleter extends Tool {
 
                 } else {
 
-                    throw "Attempted to delete outside of building area."
+                    throw "attempt to delete outside of building area."
 
                 }
 
             } else {
 
-                throw `Render component is not on entity. Entity is: ${ id }`
+                throw `missing render component.`
 
             }
 
         } else {
 
-            throw "Attempted to fire remote with invalid types."
+            throw "attempt to fire remote with invalid types."
 
         }
 

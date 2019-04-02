@@ -77,7 +77,7 @@ class LocalManager {
 
         } else {
 
-            throw `Invalid player. Player is ${ player.Name }`
+            throw `invalid player. Player is ${ player.Name }`
 
         }
 
@@ -154,7 +154,7 @@ class LocalManager {
 
         } else {
 
-            throw `Invalid entity id. Id is ${ id }`
+            throw `invalid entity id. Id is ${ id }`
 
         }
 
