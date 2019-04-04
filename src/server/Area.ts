@@ -272,7 +272,7 @@ export class Area {
             const dataStore = DataStore2<SaveSerialized>(settings.dataStoreKey, this.player)
             
             const saveSerialized = dataStore.Get()
-
+            
             let save: Save
 
             if (saveSerialized) {

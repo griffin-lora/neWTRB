@@ -51,7 +51,7 @@ export class StamperPanel extends Roact.Component {
                     <textlabel Key="cloneShortcut" Text="E" ZIndex={5} Position={new UDim2(0, -7, 0, -8)} Size={new UDim2(0, 8, 0, 12)} BackgroundTransparency={1} TextColor3={Color3.fromRGB(255, 255, 255)} TextSize={14} Font={Enum.Font.ArialBold}/>
                 </textbutton>
                 <textbutton Key="partsButton" Text="" ZIndex={3} Position={new UDim2(0, 45, 0, -6)} Size={new UDim2(0, 45, 0, 45)} Style={Enum.ButtonStyle.RobloxButton} Selected={true} TextColor3={Color3.fromRGB(255, 255, 255)} TextSize={14} Font={Enum.Font.ArialBold} Event={{
-                    MouseButton1Click: rbx => {
+                    MouseButton1Click: () => {
 
                         props.stamper.inserting = !props.stamper.inserting
 

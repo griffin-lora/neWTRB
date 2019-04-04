@@ -8,6 +8,7 @@ import { Unknown } from "../shared/Unknown"
 import Core, { CoreProps } from "./components/Core"
 import { Remote } from "./Remote"
 import { Tool } from "./Tool"
+
 const tools = ServerScriptService.server.tools
 
 const components = ServerScriptService.server.components
@@ -84,13 +85,29 @@ class LocalManager {
     }
 
     createEntity(entitySetting: EntitySetting) {
-
+        
         const entity = new Entity({ name: entitySetting.name, displayName: entitySetting.displayName, components: new Array<ComponentSetting>() } as EntitySetting)
 
         this.entities.push(entity)
+
+        let hasCore = false
+
+        entitySetting.components.forEach(componentSetting => {
+
+            if (componentSetting.name === "Core") {
+
+                hasCore = true
+
+            }
+
+        })
         
-        this.addComponent(entity, { name: "Core", props: { id: HttpService.GenerateGUID() } })
-        
+        if (!hasCore) {
+            
+            this.addComponent(entity, { name: "Core", props: { id: HttpService.GenerateGUID() } })
+            
+        }
+
         entitySetting.components.forEach(componentSetting => {
 
             this.addComponent(entity, componentSetting)
@@ -100,9 +117,19 @@ class LocalManager {
         return entity
 
     }
+
+    getComponentByName(name: string) {
+
+        const componentModule = components[name] as ModuleScript
+        const componentExport = require(componentModule) as Export
+        const componentClass = componentExport._default as typeof Component
+        
+        return componentClass
+
+    }
     
     addComponent(entity: Entity, componentSetting: ComponentSetting) {
-
+        
         const props = {} as Unknown
 
         const entries = Object.entries(componentSetting.props)
@@ -115,12 +142,12 @@ class LocalManager {
             props[key] = value
 
         })
+        
+        const newComponentSetting = { name: componentSetting.name, props: props }
+        
+        entity.entitySetting.components.push(newComponentSetting)
 
-        entity.entitySetting.components.push({ name: componentSetting.name, props: props })
-
-        const componentModule = components[componentSetting.name] as ModuleScript
-        const componentExport = require(componentModule) as Export
-        const componentClass = componentExport._default as typeof Component
+        const componentClass = this.getComponentByName(componentSetting.name)
         
         entity.components.set(componentClass, new componentClass(entity, props))
 

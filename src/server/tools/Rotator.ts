@@ -2,7 +2,7 @@ import { Tool } from "../Tool"
 import { localManager } from "../localManager"
 import Render, { RenderProps } from "../components/Render"
 import { settings } from "../../shared/settings"
-import { globalManager } from "../../shared/globalManager";
+import { globalManager } from "../../shared/globalManager"
 
 export default class Rotator extends Tool {
     

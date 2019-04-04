@@ -2,9 +2,12 @@ import { ReplicatedStorage } from "rbx-services"
 
 const remoteEvent = ReplicatedStorage.remoteEvent as RemoteEvent
 
+const resetInterval = 1
+const maxTimesFired = 20
+
 export class Remote {
 
-    constructor(name: string) {
+    constructor(name: string, check?: boolean) {
 
         this.name = name
         
@@ -12,6 +15,28 @@ export class Remote {
 
             if (typeIs(name, "string") && name === this.name) {
 
+                if (check || check === undefined) {
+                    
+                    if ((tick() - this.lastFired) < resetInterval) {
+
+                        this.timesFired += 1
+                        
+                        if (this.timesFired >= maxTimesFired) {
+
+                            player.Kick("Firing remotes too fast.")
+
+                        }
+
+                    } else {
+
+                        this.timesFired = 0
+
+                    }
+
+                    this.lastFired = tick()
+
+                }
+                
                 [...args].forEach(arg => {
 
                     if (typeIs(arg, "table") || typeIs(arg, "userdata")) {
@@ -23,8 +48,8 @@ export class Remote {
                 })
                 
                 this.events.forEach(event => {
-
-                    const [ success, message ] = pcall(() => {
+                    event(player, ...args)
+                    /*const [ success, message ] = pcall(() => {
                         
                         event(player, ...args)
 
@@ -33,8 +58,9 @@ export class Remote {
                     if (!success) {
 
                         player.Kick(`Caused a server error. Error is: ${ message }`)
+                        throw `${ player.Name } caused a server error. Error is ${ message }`
 
-                    }
+                    }*/
         
                 })
                 
@@ -69,5 +95,8 @@ export class Remote {
     name: string
 
     private events = new Array<Function>()
+
+    private lastFired = tick()
+    private timesFired = 0
 
 }

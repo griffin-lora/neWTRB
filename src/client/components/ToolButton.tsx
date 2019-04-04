@@ -24,7 +24,7 @@ export class ToolButton extends Roact.Component {
         const props = this.props as ToolButtonProps
         
         return <textbutton Ref={this.ref} Name={tostring(props.id)} AnchorPoint={new Vector2(0.5, 0.5)} Size={new UDim2(0, 50, 0, 50)} Style={Enum.ButtonStyle.RobloxButton} Text="" Event={{
-            MouseButton1Click: rbx => {
+            MouseButton1Click: () => {
 
                 if (!props.tool.equipped) {
 

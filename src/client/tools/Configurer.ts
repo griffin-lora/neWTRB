@@ -3,8 +3,13 @@ import { Workspace, RunService } from "rbx-services"
 import { Remote } from "../Remote"
 import { EntitySetting, ComponentSetting } from "../../shared/settings"
 import { Selector } from "./Selector"
-import { mouse } from "../player"
+import { mouse, playerGui } from "../player"
 import { Unknown } from "../../shared/Unknown"
+import * as Roact from "rbx-roact"
+import { ConfigGui } from "../components/ConfigGui"
+import { localManager } from "../localManager"
+import { globalManager } from "../../shared/globalManager"
+
 
 const entities = Workspace.entities as Folder
 const getEntitySettingRemote = new Remote("getEntitySetting")
@@ -41,15 +46,29 @@ export default class Configurer extends Tool {
 
         super("configurer", "http://www.roblox.com/asset/?id=59102714")
 
-        entities.GetChildren().forEach(model => {
+        let models = entities.GetChildren()
 
-            this.addConfigEntity(model)
+        spawn(() => {
+
+            while (true) {
+
+                models.forEach(model => {
+                    
+                    this.addConfigEntity(model)
+        
+                })
+                
+                models = []
+
+                RunService.RenderStepped.Wait()
+
+            }
 
         })
 
         entities.ChildAdded.Connect(model => {
-
-            this.addConfigEntity(model)
+            
+            models.push(model)
 
         })
 
@@ -57,20 +76,68 @@ export default class Configurer extends Tool {
 
             const configEntity = this.getSelected()
             
-            if (configEntity) {
+            if (configEntity && configEntity !== this.configEntity) {
+                
+                this.configEntity = configEntity
 
+                if (this.handle) {
+
+                    this.gui = undefined
+
+                    Roact.unmount(this.handle)
+                    this.handle = undefined
+
+                }
+                
                 const props = configEntity.configSetting.props as ConfigProps
 
-                const entries = Object.entries(props.config)
+                this.gui = Roact.createElement(ConfigGui, { config: props.config, model: configEntity.model, submit: (config: Unknown) => {
 
-                entries.forEach(entry => {
+                    const newConfig = {} as Unknown
 
-                    const name = entry[0]
-                    const value = entry[1]
+                    const entries = Object.entries(config)
 
-                    print(name, value)
+                    entries.forEach(entry => {
 
-                })
+                        const name = entry[0]
+                        let value = entry[1]
+                        const oldValue = props.config[name]
+
+                        if (oldValue) {
+
+                            if (typeIs(oldValue, "number")) {
+
+                                value = tonumber(value)
+
+                            }
+
+                        }
+
+                        newConfig[name] = value
+
+                    })
+
+                    props.config = newConfig
+
+                    const entityId = configEntity.model.entityId.Value
+
+                    const newEntries = Object.entries(newConfig)
+
+                    newEntries.forEach(entry => {
+
+                        const name = entry[0]
+                        const value = entry[1]
+
+                        this.fire(entityId, name, value)
+
+                    })
+
+                } })
+                this.handle = Roact.mount(this.gui, playerGui)
+
+            } else if (configEntity !== this.configEntity) {
+
+                this.configEntity = undefined
 
             }
 
@@ -80,52 +147,66 @@ export default class Configurer extends Tool {
 
     addConfigEntity(model: Instance) {
 
-        if (model.IsA("Model")) {
+        if (model.IsA("Model") && model.Parent) {
 
-            let entitySetting: EntitySetting | undefined
+            let valid = true
 
-            getEntitySettingRemote.event((receivedEntitySetting: unknown, ...args: unknown[]) => {
+            const primaryPart = model.PrimaryPart as BasePart
+
+            if (localManager.area) {
+
+                valid = globalManager.isInArea(localManager.area, primaryPart.CFrame)
+
+            }
+
+            if (valid) {
+
+                let entitySetting: EntitySetting | undefined
                 
-                if (typeIs(receivedEntitySetting, "table")) {
+                getEntitySettingRemote.clear()
 
-                    entitySetting = receivedEntitySetting as EntitySetting
-
-                }
-
-            })
-            
-            getEntitySettingRemote.fire(model.WaitForChild("entityId").Value)
-
-            do {
-
-                wait()
-
-            } while (!entitySetting)
-            
-            getEntitySettingRemote.clear()
-
-            if (entitySetting && typeIs(entitySetting, "table")) {
-
-                entitySetting = entitySetting as EntitySetting
-
-                let configSetting: ComponentSetting | undefined
-
-                entitySetting.components.forEach(componentSetting => {
-
-                    if (componentSetting.name === "Config") {
-
-                        configSetting = componentSetting
-
+                getEntitySettingRemote.event((receivedEntitySetting: unknown, ...args: unknown[]) => {
+                    
+                    if (typeIs(receivedEntitySetting, "table")) {
+                        
+                        entitySetting = receivedEntitySetting as EntitySetting
+                        
                     }
 
                 })
+                
+                getEntitySettingRemote.fire(model.WaitForChild("entityId").Value)
+                
+                do {
+                    
+                    RunService.Stepped.Wait()
 
-                if (configSetting) {
+                } while (!entitySetting)
+                
+                if (entitySetting && typeIs(entitySetting, "table")) {
+                    
+                    entitySetting = entitySetting as EntitySetting
 
-                    const configEntity = new ConfigEntity(model, configSetting)
-                    configEntity.selectionBox.Visible = this.equipped
+                    let configSetting: ComponentSetting | undefined
 
-                    this.configEntities.push(configEntity)
+                    entitySetting.components.forEach(componentSetting => {
+                        
+                        if (componentSetting.name === "Config") {
+                            
+                            configSetting = componentSetting
+
+                        }
+
+                    })
+
+                    if (configSetting) {
+                        
+                        const configEntity = new ConfigEntity(model, configSetting)
+                        configEntity.selectionBox.Visible = this.equipped
+
+                        this.configEntities.push(configEntity)
+
+                    }
 
                 }
 
@@ -177,8 +258,22 @@ export default class Configurer extends Tool {
 
         })
 
+        this.configEntity = undefined
+
+        if (this.handle) {
+
+            this.gui = undefined
+
+            Roact.unmount(this.handle)
+            this.handle = undefined
+
+        }
+
     }
 
     configEntities = new Array<ConfigEntity>()
+    configEntity: ConfigEntity | undefined
+    gui: Roact.Element | undefined
+    handle: Roact.ComponentInstanceHandle | undefined
 
 }

@@ -67,7 +67,7 @@ export class InsertPanel extends Roact.Component {
                 </frame>
             </frame>
             <textbutton Key="cancelButton" Text="" Position={new UDim2(1, -32, 0, -2)} Size={new UDim2(0, 34, 0, 34)} Style={Enum.ButtonStyle.RobloxButtonDefault} TextSize={24} TextColor3={Color3.fromRGB(255, 255, 255)} Font={Enum.Font.ArialBold} Event={{
-                MouseButton1Click: rbx => {
+                MouseButton1Click: () => {
                     
                     props.stamper.inserting = false
         

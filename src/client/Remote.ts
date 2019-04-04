@@ -11,7 +11,7 @@ export class Remote {
         remoteEvent.OnClientEvent.Connect((name: unknown, ...args) => {
             
             if (typeIs(name, "string") && name === this.name) {
-
+                
                 this.events.forEach(event => {
 
                     event(...args)
@@ -25,7 +25,7 @@ export class Remote {
     }
 
     fire(...args: unknown[]) {
-
+        
         remoteEvent.FireServer(this.name, ...args)
 
     }

@@ -36,15 +36,15 @@ if (settings.restricted) {
 
 localManager.requireTools()
 
-const getEntitySettingRemote = new Remote("getEntitySetting")
+const getEntitySettingRemote = new Remote("getEntitySetting", false)
 getEntitySettingRemote.event((player, id: unknown, ...args) => {
     
     if (typeIs(id, "string")) {
 
-        const entity = localManager.getEntityById(id)
+        const entity = localManager.getEntityById(id) // CAUSES AN ERROR SOMETIMES.
 
         const entitySetting = entity.entitySetting
-
+        
         getEntitySettingRemote.fire(player, entitySetting)
 
     } else {
