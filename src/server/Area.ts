@@ -28,7 +28,7 @@ export interface Serialized {
 export interface ComponentSettingSerialized {
 
     name: string
-    props: Unknown
+    props: Unknown<unknown>
 
 }
 
@@ -71,7 +71,7 @@ export class Area {
                 const renderProps = render.props as RenderProps
                 
                 if (globalManager.isInArea(this.model, renderProps.cframe)) {
-                    
+
                     areaEntities.push(entity)
 
                 }
@@ -130,14 +130,20 @@ export class Area {
             
             entitySetting.components.forEach(componentSetting => {
 
-                const componentSettingSerialized = { name: componentSetting.name, props: {} as Unknown } as ComponentSettingSerialized
+                const componentSettingSerialized = { name: componentSetting.name, props: {} as Unknown<unknown> } as ComponentSettingSerialized
 
                 const entries = Object.entries(componentSetting.props)
 
                 entries.forEach(entry => {
 
                     const key = entry[0]
-                    const value = entry[1]
+                    let value = entry[1]
+
+                    if (componentSettingSerialized.name === "Render" && key === "cframe" && typeIs(value, "CFrame")) {
+
+                        value = value.sub(this.model.GetPrimaryPartCFrame().Position)
+
+                    }
 
                     let serialized: Serialized
                     
@@ -192,7 +198,7 @@ export class Area {
             
             entitySettingSerialized.components.forEach(componentSettingSerialized => {
 
-                const componentSetting = { name: componentSettingSerialized.name, props: {} as Unknown } as ComponentSetting
+                const componentSetting = { name: componentSettingSerialized.name, props: {} as Unknown<unknown> } as ComponentSetting
 
                 const entries = Object.entries(componentSettingSerialized.props)
 
@@ -233,6 +239,12 @@ export class Area {
 
                         value = serialized.value
 
+                    }
+
+                    if (componentSetting.name === "Render" && key === "cframe" && typeIs(value, "CFrame")) {
+                        
+                        value = value.add(this.model.GetPrimaryPartCFrame().Position)
+                        
                     }
 
                     componentSetting.props[key] = value
