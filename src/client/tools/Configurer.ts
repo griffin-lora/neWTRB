@@ -16,10 +16,10 @@ const getEntityDatumRemote = new Remote("getEntityDatum")
 
 class ConfigEntity {
 
-    constructor(model: Model, configSetting: ComponentDatum) {
+    constructor(model: Model, configDatum: ComponentDatum) {
 
         this.model = model
-        this.configSetting = configSetting
+        this.configDatum = configDatum
 
         this.selectionBox = new Instance("SelectionBox")
         this.selectionBox.Color3 = Color3.fromRGB(0, 0, 255)
@@ -29,7 +29,7 @@ class ConfigEntity {
     }
 
     model: Model
-    configSetting: ComponentDatum
+    configDatum: ComponentDatum
     selectionBox: SelectionBox
 
 }
@@ -82,66 +82,105 @@ export default class Configurer extends Tool {
                     this.handle = undefined
 
                 }
+
+                let entityDatum: EntityDatum | undefined
                 
-                const props = configEntity.configSetting.props as ConfigProps
+                getEntityDatumRemote.clear()
 
-                this.gui = Roact.createElement(ConfigGui, { configurer: this, configTypes: props.configTypes, configValues: props.configValues, model: configEntity.model, submit: (configValues: Unknown<unknown>) => {
+                getEntityDatumRemote.event((receivedEntityDatum: unknown, ...args: unknown[]) => {
+                    
+                    if (typeIs(receivedEntityDatum, "table")) {
+                        
+                        entityDatum = receivedEntityDatum as EntityDatum
+                        
+                    }
 
-                    const newConfigValues = {} as Unknown<unknown>
+                })
+                
+                getEntityDatumRemote.fire(configEntity.model.entityId.Value)
+                
+                do {
+                    
+                    RunService.Stepped.Wait()
 
-                    const entries = Object.entries(configValues)
+                } while (!entityDatum)
 
-                    entries.forEach(entry => {
+                if (entityDatum && typeIs(entityDatum, "table")) {
+                    
+                    entityDatum = entityDatum as EntityDatum
 
-                        const name = entry[0]
-                        let value = entry[1]
-                        const configType = props.configTypes[name]
-
-                        if (configType) {
-
-                            if (configType.name === "number" || configType.name === "NumberConstrained") {
-
-                                value = tonumber(value)
-
-                            } else if (configType.name === "Option") {
-
-                                const data = configType.data as Array<string>
-
-                                data.forEach((option, index) => {
-
-                                    if (value === option) {
-
-                                        value = index
-
-                                    }
-
-                                })
-
-                            }
+                    entityDatum.components.forEach(componentDatum => {
+                        
+                        if (componentDatum.name === "Config") {
+                            
+                            configEntity.configDatum = componentDatum
 
                         }
 
-                        newConfigValues[name] = value
-
                     })
 
-                    props.configValues = newConfigValues
+                    const props = configEntity.configDatum.props as ConfigProps
 
-                    const entityId = configEntity.model.entityId.Value
+                    this.gui = Roact.createElement(ConfigGui, { configurer: this, configTypes: props.configTypes, configValues: props.configValues, model: configEntity.model, submit: (configValues: Unknown<unknown>) => {
 
-                    const newEntries = Object.entries(newConfigValues)
+                        const newConfigValues = {} as Unknown<unknown>
 
-                    newEntries.forEach(entry => {
+                        const entries = Object.entries(configValues)
 
-                        const name = entry[0]
-                        const value = entry[1]
+                        entries.forEach(entry => {
 
-                        this.fire(entityId, name, value)
+                            const name = entry[0]
+                            let value = entry[1]
+                            const configType = props.configTypes[name]
 
-                    })
+                            if (configType) {
 
-                } })
-                this.handle = Roact.mount(this.gui, playerGui)
+                                if (configType.name === "number" || configType.name === "NumberConstrained") {
+
+                                    value = tonumber(value)
+
+                                } else if (configType.name === "Option") {
+
+                                    const data = configType.data as Array<string>
+
+                                    data.forEach((option, index) => {
+
+                                        if (value === option) {
+
+                                            value = index
+
+                                        }
+
+                                    })
+
+                                }
+
+                            }
+
+                            newConfigValues[name] = value
+
+                        })
+
+                        props.configValues = newConfigValues
+
+                        const entityId = configEntity.model.entityId.Value
+
+                        const newEntries = Object.entries(newConfigValues)
+
+                        newEntries.forEach(entry => {
+
+                            const name = entry[0]
+                            const value = entry[1]
+
+                            this.fire(entityId, name, value)
+
+                        })
+
+                    }})
+
+                    this.handle = Roact.mount(this.gui, playerGui)
+                    
+                }
 
             } else if (configEntity !== this.configEntity) {
 
@@ -195,21 +234,21 @@ export default class Configurer extends Tool {
                     
                     entityDatum = entityDatum as EntityDatum
 
-                    let configSetting: ComponentDatum | undefined
+                    let configDatum: ComponentDatum | undefined
 
                     entityDatum.components.forEach(componentDatum => {
                         
                         if (componentDatum.name === "Config") {
                             
-                            configSetting = componentDatum
+                            configDatum = componentDatum
 
                         }
 
                     })
 
-                    if (configSetting) {
+                    if (configDatum) {
                         
-                        const configEntity = new ConfigEntity(model, configSetting)
+                        const configEntity = new ConfigEntity(model, configDatum)
                         configEntity.selectionBox.Visible = this.equipped
 
                         this.configEntities.push(configEntity)

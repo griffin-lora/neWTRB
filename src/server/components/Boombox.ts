@@ -24,7 +24,6 @@ export default class Boombox extends Component {
 
         super(entity, props)
         
-
         const render = entity.components.get(Render)
         const config = entity.components.get(Config)
         
@@ -34,6 +33,8 @@ export default class Boombox extends Component {
     }
 
     update() {
+
+        super.update()
 
         if (this.render && this.config) {
 

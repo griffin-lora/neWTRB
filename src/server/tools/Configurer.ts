@@ -6,6 +6,7 @@ import { globalManager } from "../../shared/globalManager"
 import Config, { ConfigProps, NumberConstrainedData } from "../components/Config"
 import { Unknown } from "../../shared/Unknown"
 import inspect from "rbx-inspect";
+import { TextService } from "rbx-services";
 
 export default class Configurer extends Tool {
     
@@ -77,6 +78,24 @@ export default class Configurer extends Tool {
                                 }
 
                             }
+
+                        } else if (receivedTypeName === "string") {
+
+                            let filteredString = "String filtering failed. Please try again."
+
+                            const [ success ] = pcall(() => {
+
+                                if (typeIs(value, "string")) {
+
+                                    const result = TextService.FilterStringAsync(value, player.UserId) as TextFilterResult
+
+                                    filteredString = result.GetNonChatStringForBroadcastAsync()
+
+                                }
+
+                            })
+
+                            value = filteredString
 
                         }
 

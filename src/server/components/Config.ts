@@ -32,7 +32,7 @@ export default class Config extends Component {
 
     update() {
 
-        
+        super.update()
 
     }
 

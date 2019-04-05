@@ -4,6 +4,8 @@ import Stamper from "../tools/Stamper"
 import { RunService, UserInputService } from "rbx-services"
 import { stamperMode } from "../enum"
 import { settings, getEntityDatum } from "../../shared/settings"
+import { CategoryButton } from "./CategoryButton"
+import { EntityButton } from "./EntityButton";
 
 export interface InsertPanelProps {
 
@@ -18,6 +20,7 @@ export class InsertPanel extends Roact.Component {
         super(props)
 
         this.ref = Roact.createRef()
+        this.entitiesFrameRef = Roact.createRef()
 
     }
 
@@ -25,46 +28,17 @@ export class InsertPanel extends Roact.Component {
 
         const props = this.props as InsertPanelProps
 
+        const categoryButtons = new Array<Roact.Element>()
+
+        settings.categories.forEach(name => {
+
+            categoryButtons.push(<CategoryButton stamper={props.stamper} name={name}></CategoryButton>)
+
+        })
+
         return <frame Ref={this.ref} Key="insertPanel" Active={true} Position={new UDim2(0.2, 2, 0.1, 24)} Size={new UDim2(0.6, -20, 0.64, 0)} Style={Enum.FrameStyle.RobloxRound}>
-            <frame Key="itemsFrame" Position={new UDim2(0.24, 0, 0.085, 0)} Size={new UDim2(0.54, 0, 0.8, 0)} ClipsDescendants={true} BorderSizePixel={0} BackgroundTransparency={1}>
-                <frame Key="scrollFrame" Size={new UDim2(1, 0, 1, 0)} BorderSizePixel={0} BackgroundTransparency={1} BackgroundColor3={Color3.fromRGB(255, 255, 255)}>
-                    <uigridlayout CellPadding={new UDim2(0, 0, 0, 0)} CellSize={new UDim2(0, 64, 0, 64)}/>
-                    <textbutton Size={new UDim2(0, 100, 0, 100)} Event={{
-                        MouseButton1Click: () => {
-                            props.stamper.startPlacing(settings.entities[0])
-                        }
-                    }}/>
-                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
-                        MouseButton1Click: () => {
-                            props.stamper.startPlacing(settings.entities[1])
-                        }
-                    }}/>
-                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
-                        MouseButton1Click: () => {
-                            props.stamper.startPlacing(settings.entities[2])
-                        }
-                    }}/>
-                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
-                        MouseButton1Click: () => {
-                            props.stamper.startPlacing(settings.entities[3])
-                        }
-                    }}/>
-                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
-                        MouseButton1Click: () => {
-                            props.stamper.startPlacing(settings.entities[4])
-                        }
-                    }}/>
-                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
-                        MouseButton1Click: () => {
-                            props.stamper.startPlacing(getEntityDatum("56452072"))
-                        }
-                    }}/>
-                    <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
-                        MouseButton1Click: () => {
-                            props.stamper.startPlacing(settings.entities[10])
-                        }
-                    }}/>
-                </frame>
+            <frame Ref={this.entitiesFrameRef} Key="entitiesFrame" Position={new UDim2(0.24, 0, 0.085, 0)} Size={new UDim2(0.54, 0, 0.8, 0)} ClipsDescendants={true} BorderSizePixel={0} BackgroundTransparency={1}>
+                <uigridlayout CellPadding={new UDim2(0, 0, 0, 0)} CellSize={new UDim2(0, 64, 0, 64)}/>
             </frame>
             <textbutton Key="cancelButton" Text="" Position={new UDim2(1, -32, 0, -2)} Size={new UDim2(0, 34, 0, 34)} Style={Enum.ButtonStyle.RobloxButtonDefault} TextSize={24} TextColor3={Color3.fromRGB(255, 255, 255)} Font={Enum.Font.ArialBold} Event={{
                 MouseButton1Click: () => {
@@ -89,7 +63,8 @@ export class InsertPanel extends Roact.Component {
                 <frame Key="line" Position={new UDim2(1, -3, 0.06, 0)} Size={new UDim2(0, 3, 0.9, 0)} BorderSizePixel={0} BackgroundTransparency={0.7} BackgroundColor3={Color3.fromRGB(255, 255, 255)}/>
                 <textlabel Key="setsHeader" Text="Sets" Size={new UDim2(0, 47, 0, 24)} TextYAlignment={Enum.TextYAlignment.Top} BackgroundTransparency={1} TextXAlignment={Enum.TextXAlignment.Left} TextColor3={Color3.fromRGB(255, 255, 255)} TextSize={24} Font={Enum.Font.ArialBold}/>
                 <frame Key="setsLists" Position={new UDim2(0, 0, 0.06, 0)} Size={new UDim2(1, -6, 0.94, 0)} BackgroundTransparency={1} BackgroundColor3={Color3.fromRGB(204, 0, 153)}>
-                    <uigridlayout CellPadding={new UDim2(0, 0, 0, 0)} CellSize={new UDim2(1, -5, 0, 18)} FillDirection={Enum.FillDirection.Vertical}/>
+                    <uilistlayout/>
+                    {categoryButtons}
                 </frame>
             </frame>
             <frame Key="itemPreview" Position={new UDim2(0.79, 0, 0.085, 0)} Size={new UDim2(0.21, 0, 0.9, 0)} BackgroundTransparency={1} BackgroundColor3={Color3.fromRGB(102, 0, 51)}>
@@ -114,10 +89,38 @@ export class InsertPanel extends Roact.Component {
 
         const insertPanel = this.ref.current as Frame
 
+        let category = props.stamper.category
+
         let open = true
 
         RunService.RenderStepped.Connect(() => {
             
+            if (category !== props.stamper.category) {
+
+                const entitiesFrame = this.entitiesFrameRef.current as Frame
+
+                entitiesFrame.GetChildren().forEach(child => {
+
+                    if (!child.IsA("UIGridLayout")) {
+
+                        child.Destroy()
+
+                    }
+
+                })
+
+                category = props.stamper.category
+
+                category.forEach(entityDatum => {
+
+                    const button = <EntityButton stamper={props.stamper} name={entityDatum.name} displayName={entityDatum.displayName} smallImage={entityDatum.smallImage} largeImage={entityDatum.largeImage}></EntityButton>
+                    
+                    Roact.mount(button, entitiesFrame)
+
+                })
+
+            }
+
             if (props.stamper.inserting && !open) {
 
                 insertPanel.TweenPosition(new UDim2(0.2, 2, 0.1, 24), Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, 0.35, true)
@@ -137,5 +140,6 @@ export class InsertPanel extends Roact.Component {
     }
 
     ref: Roact.Ref<Frame>
+    entitiesFrameRef: Roact.Ref<Frame>
     
 }

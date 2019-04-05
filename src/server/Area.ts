@@ -286,7 +286,7 @@ export class Area {
             const saveSerialized = dataStore.Get()
             
             let save: Save
-
+            
             if (saveSerialized) {
 
                 save = this.deserialize(saveSerialized)

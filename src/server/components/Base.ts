@@ -17,7 +17,7 @@ export default class Base extends Component {
 
     update() {
 
-
+        super.update()
 
     }
 

@@ -94,7 +94,8 @@ export default class Physics extends Component {
                 }
 
                 if (descendant.IsA("BasePart")) {
-
+                    
+                    descendant.CustomPhysicalProperties = new PhysicalProperties(Enum.Material.Plastic)
                     descendant.Anchored = false
 
                 }
@@ -106,6 +107,8 @@ export default class Physics extends Component {
     }
 
     update() {
+
+        super.update()
         
         /*if (this.render) {
             

@@ -7,7 +7,7 @@ import { Preview } from "../Preview"
 import { playerGui, mouse } from "../player"
 import { localManager } from "../localManager"
 import { globalManager } from "../../shared/globalManager"
-import { EntityDatum } from "../../shared/settings";
+import { EntityDatum, settings } from "../../shared/settings"
 
 export default class Stamper extends Tool {
     
@@ -41,6 +41,8 @@ export default class Stamper extends Tool {
             }
 
         })
+
+        this.setCategory("Basic Building")
 
     }
 
@@ -88,9 +90,31 @@ export default class Stamper extends Tool {
 
     }
 
+    setCategory(name: string) {
+
+        this.categoryName = name
+
+        const category = new Array<EntityDatum>()
+
+        settings.entities.forEach(entityDatum => {
+
+            if (entityDatum.category === name) {
+
+                category.push(entityDatum)
+
+            }
+
+        })
+
+        this.category = category
+
+    }
+
     mode = stamperMode.none
     inserting = true
     preview: Preview | undefined
     gui: Roact.Element
+    categoryName = ""
+    category = new Array<EntityDatum>()
 
 }

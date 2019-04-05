@@ -70,6 +70,8 @@ export default class Pad extends Component {
     }
 
     update() {
+        
+        super.update()
 
         if (this.render && this.config) {
 
