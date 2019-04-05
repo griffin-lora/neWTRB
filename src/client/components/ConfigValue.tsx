@@ -77,6 +77,18 @@ export class ConfigValue extends Roact.Component {
             data.forEach(option => {
 
                 buttons.push(<textbutton Key="choiceButton" Text={option} ZIndex={6} Position={new UDim2(0, 0, 0.4, 0)} Size={new UDim2(1, 0, 0.2, 0)} BorderSizePixel={0} BackgroundTransparency={1} BackgroundColor3={Color3.fromRGB(255, 255, 255)} TextWrapped={true} TextXAlignment={Enum.TextXAlignment.Left} TextColor3={Color3.fromRGB(255, 255, 255)} TextSize={18} Font={Enum.Font.Arial} Event={{
+                    MouseEnter: optionButton => {
+
+                        optionButton.BackgroundTransparency = 0
+                        optionButton.TextColor3 = new Color3(0, 0, 0)
+                        
+                    },
+                    MouseLeave: optionButton => {
+
+                        optionButton.BackgroundTransparency = 1
+                        optionButton.TextColor3 = new Color3(1, 1, 1)
+
+                    },
                     MouseButton1Click: optionButton => {
                             
                         const list = this.listRef.current as TextButton
@@ -111,7 +123,7 @@ export class ConfigValue extends Roact.Component {
                         <imagelabel Key="icon" Image="https://www.roblox.com/asset/?id=45732894" ZIndex={2} Position={new UDim2(1, -11, 0.5, -2)} Size={new UDim2(0, 11, 0, 6)} BackgroundTransparency={1}/>
                     </textbutton>
                     <textbutton Ref={this.listRef} Text="" Key="list" ZIndex={5} Visible={false} Size={new UDim2(1, 0, data.length + 1, 0)} Style={Enum.ButtonStyle.RobloxButton}>
-                        <uilistlayout Padding={new UDim(0, data.length + 1)}/>
+                        <uilistlayout/>
                         {buttons}
                     </textbutton>
                 </frame>
