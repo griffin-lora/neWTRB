@@ -1,4 +1,4 @@
-import { EntitySetting, ComponentSetting } from "../shared/settings"
+import { EntityDatum, ComponentDatum } from "../shared/settings"
 import { RunService, Workspace, ReplicatedStorage } from "rbx-services"
 import Stamper from "./tools/Stamper"
 import { mouse } from "./player"
@@ -50,15 +50,15 @@ export class Collision {
 
 export class Preview {
 
-    constructor(stamper: Stamper, previewSetting: EntitySetting) {
+    constructor(stamper: Stamper, previewSetting: EntityDatum) {
         
-        let renderSetting: ComponentSetting | undefined
+        let renderSetting: ComponentDatum | undefined
 
-        previewSetting.components.forEach(componentSetting => {
+        previewSetting.components.forEach(componentDatum => {
 
-            if (componentSetting.name === "Render") {
+            if (componentDatum.name === "Render") {
 
-                renderSetting = componentSetting
+                renderSetting = componentDatum
 
             }
 

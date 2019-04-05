@@ -1,5 +1,5 @@
 import { ReplicatedStorage, Workspace } from "rbx-services"
-import { settings, EntitySetting, ComponentSetting } from "../shared/settings"
+import { settings, EntityDatum, ComponentDatum } from "../shared/settings"
 import { localManager } from "./localManager"
 import Render, { RenderProps } from "./components/Render"
 import { globalManager } from "../shared/globalManager"
@@ -14,7 +14,7 @@ const areas = Workspace.areas
 
 export interface Save {
 
-    entities: Array<EntitySetting>
+    entities: Array<EntityDatum>
 
 }
 
@@ -25,22 +25,22 @@ export interface Serialized {
     
 }
 
-export interface ComponentSettingSerialized {
+export interface ComponentDatumSerialized {
 
     name: string
     props: Unknown<unknown>
 
 }
 
-export interface EntitySettingSerialized {
+export interface EntityDatumSerialized {
 
-    components: Array<ComponentSettingSerialized>
+    components: Array<ComponentDatumSerialized>
     
 }
 
 export interface SaveSerialized {
 
-    entities: Array<EntitySettingSerialized>
+    entities: Array<EntityDatumSerialized>
 
 }
 
@@ -88,7 +88,7 @@ export class Area {
 
         const save = {
 
-            entities: new Array<EntitySetting>()
+            entities: new Array<EntityDatum>()
 
         } as Save
 
@@ -96,7 +96,7 @@ export class Area {
 
         areaEntities.forEach(entity => {
 
-            save.entities.push(entity.entitySetting)
+            save.entities.push(entity.entityDatum)
 
         })
 
@@ -124,22 +124,22 @@ export class Area {
 
         const saveSerialized = { entities: [] } as SaveSerialized
 
-        save.entities.forEach(entitySetting => {
+        save.entities.forEach(entityDatum => {
 
-            const entitySettingSerialized = { components: [] } as EntitySettingSerialized
+            const entityDatumSerialized = { components: [] } as EntityDatumSerialized
             
-            entitySetting.components.forEach(componentSetting => {
+            entityDatum.components.forEach(componentDatum => {
 
-                const componentSettingSerialized = { name: componentSetting.name, props: {} as Unknown<unknown> } as ComponentSettingSerialized
+                const componentDatumSerialized = { name: componentDatum.name, props: {} as Unknown<unknown> } as ComponentDatumSerialized
 
-                const entries = Object.entries(componentSetting.props)
+                const entries = Object.entries(componentDatum.props)
 
                 entries.forEach(entry => {
 
                     const key = entry[0]
                     let value = entry[1]
 
-                    if (componentSettingSerialized.name === "Render" && key === "cframe" && typeIs(value, "CFrame")) {
+                    if (componentDatumSerialized.name === "Render" && key === "cframe" && typeIs(value, "CFrame")) {
 
                         value = value.sub(this.model.GetPrimaryPartCFrame().Position)
 
@@ -171,15 +171,15 @@ export class Area {
                         
                     }
 
-                    componentSettingSerialized.props[key] = serialized
+                    componentDatumSerialized.props[key] = serialized
 
                 })
 
-                entitySettingSerialized.components.push(componentSettingSerialized)
+                entityDatumSerialized.components.push(componentDatumSerialized)
 
             })
 
-            saveSerialized.entities.push(entitySettingSerialized)
+            saveSerialized.entities.push(entityDatumSerialized)
             
 
         })
@@ -192,15 +192,15 @@ export class Area {
 
         const save = { entities: [] } as Save
 
-        saveSerialized.entities.forEach(entitySettingSerialized => {
+        saveSerialized.entities.forEach(entityDatumSerialized => {
 
-            const entitySetting = { name: "", displayName: "", smallImage: "", largeImage: "", category: "", components: [] } as EntitySetting
+            const entityDatum = { name: "", displayName: "", smallImage: "", largeImage: "", category: "", components: [] } as EntityDatum
             
-            entitySettingSerialized.components.forEach(componentSettingSerialized => {
+            entityDatumSerialized.components.forEach(componentDatumSerialized => {
 
-                const componentSetting = { name: componentSettingSerialized.name, props: {} as Unknown<unknown> } as ComponentSetting
+                const componentDatum = { name: componentDatumSerialized.name, props: {} as Unknown<unknown> } as ComponentDatum
 
-                const entries = Object.entries(componentSettingSerialized.props)
+                const entries = Object.entries(componentDatumSerialized.props)
 
                 entries.forEach(entry => {
 
@@ -241,21 +241,21 @@ export class Area {
 
                     }
 
-                    if (componentSetting.name === "Render" && key === "cframe" && typeIs(value, "CFrame")) {
+                    if (componentDatum.name === "Render" && key === "cframe" && typeIs(value, "CFrame")) {
                         
                         value = value.add(this.model.GetPrimaryPartCFrame().Position)
                         
                     }
 
-                    componentSetting.props[key] = value
+                    componentDatum.props[key] = value
 
                 })
 
-                entitySetting.components.push(componentSetting)
+                entityDatum.components.push(componentDatum)
 
             })
 
-            save.entities.push(entitySetting)
+            save.entities.push(entityDatum)
 
         })
         
@@ -297,9 +297,9 @@ export class Area {
 
             }
             
-            save.entities.forEach(entitySetting => {
+            save.entities.forEach(entityDatum => {
                 
-                localManager.createEntity(entitySetting)
+                localManager.createEntity(entityDatum)
                 
             })
 

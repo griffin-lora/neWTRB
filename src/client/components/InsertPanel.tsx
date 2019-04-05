@@ -3,7 +3,7 @@ import { Tool } from "../Tool"
 import Stamper from "../tools/Stamper"
 import { RunService, UserInputService } from "rbx-services"
 import { stamperMode } from "../enum"
-import { settings, getEntitySetting } from "../../shared/settings"
+import { settings, getEntityDatum } from "../../shared/settings"
 
 export interface InsertPanelProps {
 
@@ -56,7 +56,7 @@ export class InsertPanel extends Roact.Component {
                     }}/>
                     <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{
                         MouseButton1Click: () => {
-                            props.stamper.startPlacing(getEntitySetting("56452072"))
+                            props.stamper.startPlacing(getEntityDatum("56452072"))
                         }
                     }}/>
                     <textbutton Position={new UDim2(0, 100, 0, 0)} Size={new UDim2(0, 100, 0, 100)} Event={{

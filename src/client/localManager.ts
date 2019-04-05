@@ -17,7 +17,7 @@ class LocalManager {
         this.joinRemote.event((area: unknown) => {
 
             if (typeIs(area, "Instance") && area.IsA("Model")) {
-
+                
                 this.area = area
 
             }

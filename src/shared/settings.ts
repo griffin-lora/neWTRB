@@ -6,21 +6,21 @@ export interface ComponentProps {
 
 }
 
-export interface ComponentSetting {
+export interface ComponentDatum {
 
     name: string
     props: ComponentProps
 
 }
 
-export interface EntitySetting {
+export interface EntityDatum {
 
     name: string
     displayName: string
     smallImage: string
     largeImage: string
     category: string
-    components: Array<ComponentSetting>
+    components: Array<ComponentDatum>
 
 }
 
@@ -34,7 +34,7 @@ export interface Settings {
 
     restricted: boolean
     dataStoreKey: string
-    entities: Array<EntitySetting>
+    entities: Array<EntityDatum>
     tools: Array<ToolSetting>
 
 }
@@ -62,27 +62,27 @@ export const settings = {
 
 } as Settings
 
-export const getEntitySetting = (name: string) => {
+export const getEntityDatum = (name: string) => {
 
-    let actualEntitySetting: EntitySetting | undefined
+    let actualEntityDatum: EntityDatum | undefined
     
-    settings.entities.forEach(entitySetting => {
+    settings.entities.forEach(entityDatum => {
         
-        if (entitySetting.name === name) {
+        if (entityDatum.name === name) {
             
-            actualEntitySetting = entitySetting
+            actualEntityDatum = entityDatum
 
         }
         
     })
 
-    if (actualEntitySetting) {
+    if (actualEntityDatum) {
 
-        return actualEntitySetting
+        return actualEntityDatum
 
     } else {
 
-        throw `invalid setting name. Name is ${ name }`
+        throw `invalid datum name. Name is ${ name }`
 
     }
 

@@ -1,5 +1,5 @@
 import { Tool } from "../Tool"
-import { getEntitySetting, settings } from "../../shared/settings"
+import { getEntityDatum, settings } from "../../shared/settings"
 import { localManager } from "../localManager"
 import Render, { RenderProps } from "../components/Render"
 import { globalManager } from "../../shared/globalManager"
@@ -30,19 +30,19 @@ export default class Stamper extends Tool {
             
             if (valid) {
                 
-                const entitySetting = getEntitySetting(name)
+                const entityDatum = getEntityDatum(name)
 
-                entitySetting.components.forEach(componentSetting => {
+                entityDatum.components.forEach(componentDatum => {
 
-                    if (componentSetting.name === "Render") {
+                    if (componentDatum.name === "Render") {
 
-                        componentSetting.props.cframe = cframe
+                        componentDatum.props.cframe = cframe
 
                     }
 
                 })
                 
-                const entity = localManager.createEntity(entitySetting)
+                const entity = localManager.createEntity(entityDatum)
 
                 if (settings.restricted) {
 

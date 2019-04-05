@@ -3,11 +3,11 @@ import * as Roact from "rbx-roact"
 import { StamperGui } from "../components/StamperGui"
 import { Players, UserInputService, RunService } from "rbx-services"
 import { stamperMode } from "../enum"
-import { EntitySetting } from "../../shared/settings"
 import { Preview } from "../Preview"
 import { playerGui, mouse } from "../player"
 import { localManager } from "../localManager"
 import { globalManager } from "../../shared/globalManager"
+import { EntityDatum } from "../../shared/settings";
 
 export default class Stamper extends Tool {
     
@@ -56,7 +56,7 @@ export default class Stamper extends Tool {
 
     }
 
-    startPlacing(previewSetting: EntitySetting) {
+    startPlacing(previewDatum: EntityDatum) {
 
         if (this.preview) {
 
@@ -64,13 +64,13 @@ export default class Stamper extends Tool {
 
         }
         
-        this.preview = new Preview(this, previewSetting)
+        this.preview = new Preview(this, previewDatum)
         this.inserting = false
         this.mode = stamperMode.placing
 
     }
     
-    place(entitySetting: EntitySetting, cframe: CFrame) {
+    place(entityDatum: EntityDatum, cframe: CFrame) {
 
         let valid = true
 
@@ -82,7 +82,7 @@ export default class Stamper extends Tool {
         
         if (valid) {
 
-            this.fire(entitySetting.name, cframe)
+            this.fire(entityDatum.name, cframe)
 
         }
 

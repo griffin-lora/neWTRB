@@ -1,5 +1,5 @@
 import { Area } from "./Area"
-import { EntitySetting, ComponentSetting, settings } from "../shared/settings"
+import { EntityDatum, ComponentDatum, settings } from "../shared/settings"
 import { Entity } from "./Entity"
 import { ReplicatedStorage, HttpService, ServerScriptService } from "rbx-services"
 import { Export } from "../shared/Export"
@@ -84,17 +84,17 @@ class LocalManager {
 
     }
 
-    createEntity(entitySetting: EntitySetting) {
+    createEntity(entityDatum: EntityDatum) {
         
-        const entity = new Entity({ name: entitySetting.name, displayName: entitySetting.displayName, components: new Array<ComponentSetting>() } as EntitySetting)
+        const entity = new Entity({ name: entityDatum.name, displayName: entityDatum.displayName, components: new Array<ComponentDatum>() } as EntityDatum)
 
         this.entities.push(entity)
 
         let hasCore = false
 
-        entitySetting.components.forEach(componentSetting => {
+        entityDatum.components.forEach(componentDatum => {
 
-            if (componentSetting.name === "Core") {
+            if (componentDatum.name === "Core") {
 
                 hasCore = true
 
@@ -108,9 +108,9 @@ class LocalManager {
             
         }
 
-        entitySetting.components.forEach(componentSetting => {
+        entityDatum.components.forEach(componentDatum => {
 
-            this.addComponent(entity, componentSetting)
+            this.addComponent(entity, componentDatum)
 
         })
 
@@ -153,15 +153,15 @@ class LocalManager {
 
     }
     
-    addComponent(entity: Entity, componentSetting: ComponentSetting) {
+    addComponent(entity: Entity, componentDatum: ComponentDatum) {
         
-        const props = this.clone<Unknown<unknown>>(componentSetting.props) as Unknown<unknown>
+        const props = this.clone<Unknown<unknown>>(componentDatum.props) as Unknown<unknown>
         
-        const newComponentSetting = { name: componentSetting.name, props: props }
+        const newComponentDatum = { name: componentDatum.name, props: props }
         
-        entity.entitySetting.components.push(newComponentSetting)
+        entity.entityDatum.components.push(newComponentDatum)
 
-        const componentClass = this.getComponentByName(componentSetting.name)
+        const componentClass = this.getComponentByName(componentDatum.name)
         
         entity.components.set(componentClass, new componentClass(entity, props))
 

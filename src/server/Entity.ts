@@ -1,15 +1,15 @@
 import { Component } from "./Component"
-import { EntitySetting } from "../shared/settings"
+import { EntityDatum } from "../shared/settings"
 
 export class Entity {
 
-    constructor(entitySetting: EntitySetting) {
+    constructor(entityDatum: EntityDatum) {
 
-        this.entitySetting = entitySetting
+        this.entityDatum = entityDatum
     
     }
 
     components = new Map<typeof Component, Component>()
-    entitySetting: EntitySetting
+    entityDatum: EntityDatum
 
 }

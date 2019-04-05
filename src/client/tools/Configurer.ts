@@ -1,7 +1,7 @@
 import { Tool } from "../Tool"
 import { Workspace, RunService } from "rbx-services"
 import { Remote } from "../Remote"
-import { EntitySetting, ComponentSetting } from "../../shared/settings"
+import { EntityDatum, ComponentDatum } from "../../shared/settings"
 import { Selector } from "./Selector"
 import { mouse, playerGui } from "../player"
 import { Unknown } from "../../shared/Unknown"
@@ -12,11 +12,11 @@ import { globalManager } from "../../shared/globalManager"
 import { ConfigProps } from "../../server/components/Config"
 
 const entities = Workspace.entities as Folder
-const getEntitySettingRemote = new Remote("getEntitySetting")
+const getEntityDatumRemote = new Remote("getEntityDatum")
 
 class ConfigEntity {
 
-    constructor(model: Model, configSetting: ComponentSetting) {
+    constructor(model: Model, configSetting: ComponentDatum) {
 
         this.model = model
         this.configSetting = configSetting
@@ -29,7 +29,7 @@ class ConfigEntity {
     }
 
     model: Model
-    configSetting: ComponentSetting
+    configSetting: ComponentDatum
     selectionBox: SelectionBox
 
 }
@@ -169,39 +169,39 @@ export default class Configurer extends Tool {
 
             if (valid) {
 
-                let entitySetting: EntitySetting | undefined
+                let entityDatum: EntityDatum | undefined
                 
-                getEntitySettingRemote.clear()
+                getEntityDatumRemote.clear()
 
-                getEntitySettingRemote.event((receivedEntitySetting: unknown, ...args: unknown[]) => {
+                getEntityDatumRemote.event((receivedEntityDatum: unknown, ...args: unknown[]) => {
                     
-                    if (typeIs(receivedEntitySetting, "table")) {
+                    if (typeIs(receivedEntityDatum, "table")) {
                         
-                        entitySetting = receivedEntitySetting as EntitySetting
+                        entityDatum = receivedEntityDatum as EntityDatum
                         
                     }
 
                 })
                 
-                getEntitySettingRemote.fire(model.WaitForChild("entityId").Value)
+                getEntityDatumRemote.fire(model.WaitForChild("entityId").Value)
                 
                 do {
                     
                     RunService.Stepped.Wait()
 
-                } while (!entitySetting)
+                } while (!entityDatum)
                 
-                if (entitySetting && typeIs(entitySetting, "table")) {
+                if (entityDatum && typeIs(entityDatum, "table")) {
                     
-                    entitySetting = entitySetting as EntitySetting
+                    entityDatum = entityDatum as EntityDatum
 
-                    let configSetting: ComponentSetting | undefined
+                    let configSetting: ComponentDatum | undefined
 
-                    entitySetting.components.forEach(componentSetting => {
+                    entityDatum.components.forEach(componentDatum => {
                         
-                        if (componentSetting.name === "Config") {
+                        if (componentDatum.name === "Config") {
                             
-                            configSetting = componentSetting
+                            configSetting = componentDatum
 
                         }
 
