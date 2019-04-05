@@ -23,7 +23,7 @@ export default class Base extends Component {
 
     destroy() {
 
-        super.destroy
+        super.destroy()
 
     }
 

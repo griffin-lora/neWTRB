@@ -1,5 +1,5 @@
-export interface Unknown {
+export interface Unknown<T> {
 
-    [key: string]: unknown
+    [key: string]: T
 
 }

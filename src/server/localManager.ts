@@ -8,7 +8,7 @@ import { Unknown } from "../shared/Unknown"
 import Core, { CoreProps } from "./components/Core"
 import { Remote } from "./Remote"
 import { Tool } from "./Tool"
-
+import inspect from "rbx-inspect";
 const tools = ServerScriptService.server.tools
 
 const components = ServerScriptService.server.components
@@ -127,21 +127,35 @@ class LocalManager {
         return componentClass
 
     }
-    
-    addComponent(entity: Entity, componentSetting: ComponentSetting) {
-        
-        const props = {} as Unknown
 
-        const entries = Object.entries(componentSetting.props)
+    clone<T>(object: T) {
+
+        const newObject = {} as T
+
+        const entries = Object.entries(object)
 
         entries.forEach(entry => {
 
             const key = entry[0]
-            const value = entry[1]
+            let value = entry[1]
 
-            props[key] = value
+            if (typeIs(value, "table")) {
+
+                value = this.clone(value)
+
+            }
+            
+            newObject[key] = value
 
         })
+
+        return newObject
+
+    }
+    
+    addComponent(entity: Entity, componentSetting: ComponentSetting) {
+        
+        const props = this.clone<Unknown<unknown>>(componentSetting.props) as Unknown<unknown>
         
         const newComponentSetting = { name: componentSetting.name, props: props }
         

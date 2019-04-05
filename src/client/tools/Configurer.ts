@@ -9,16 +9,10 @@ import * as Roact from "rbx-roact"
 import { ConfigGui } from "../components/ConfigGui"
 import { localManager } from "../localManager"
 import { globalManager } from "../../shared/globalManager"
-
+import { ConfigProps } from "../../server/components/Config"
 
 const entities = Workspace.entities as Folder
 const getEntitySettingRemote = new Remote("getEntitySetting")
-
-export interface ConfigProps {
-
-    config: Unknown
-
-}
 
 class ConfigEntity {
 
@@ -91,37 +85,51 @@ export default class Configurer extends Tool {
                 
                 const props = configEntity.configSetting.props as ConfigProps
 
-                this.gui = Roact.createElement(ConfigGui, { config: props.config, model: configEntity.model, submit: (config: Unknown) => {
+                this.gui = Roact.createElement(ConfigGui, { configurer: this, configTypes: props.configTypes, configValues: props.configValues, model: configEntity.model, submit: (configValues: Unknown<unknown>) => {
 
-                    const newConfig = {} as Unknown
+                    const newConfigValues = {} as Unknown<unknown>
 
-                    const entries = Object.entries(config)
+                    const entries = Object.entries(configValues)
 
                     entries.forEach(entry => {
 
                         const name = entry[0]
                         let value = entry[1]
-                        const oldValue = props.config[name]
+                        const configType = props.configTypes[name]
 
-                        if (oldValue) {
+                        if (configType) {
 
-                            if (typeIs(oldValue, "number")) {
+                            if (configType.name === "number" || configType.name === "NumberConstrained") {
 
                                 value = tonumber(value)
+
+                            } else if (configType.name === "Option") {
+
+                                const data = configType.data as Array<string>
+
+                                data.forEach((option, index) => {
+
+                                    if (value === option) {
+
+                                        value = index
+
+                                    }
+
+                                })
 
                             }
 
                         }
 
-                        newConfig[name] = value
+                        newConfigValues[name] = value
 
                     })
 
-                    props.config = newConfig
+                    props.configValues = newConfigValues
 
                     const entityId = configEntity.model.entityId.Value
 
-                    const newEntries = Object.entries(newConfig)
+                    const newEntries = Object.entries(newConfigValues)
 
                     newEntries.forEach(entry => {
 

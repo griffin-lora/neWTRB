@@ -4,7 +4,22 @@ import { Unknown } from "../../shared/Unknown"
 
 export interface ConfigProps {
 
-    config: Unknown
+    configTypes: Unknown<ConfigType>
+    configValues: Unknown<unknown>
+
+}
+
+export interface ConfigType {
+
+    name: string
+    data: unknown | undefined
+
+}
+
+export interface NumberConstrainedData {
+    
+    min: number
+    max: number
 
 }
 
