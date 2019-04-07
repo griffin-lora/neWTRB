@@ -44,11 +44,15 @@ class LocalManager {
 
     playerDisconnect(player: Player) {
 
-        const area = this.getAreaByPlayer(player)
-        
-        area.player = undefined
-        
-        area.clear()
+        if (settings.restricted) {
+
+            const area = this.getAreaByPlayer(player)
+            
+            area.player = undefined
+            
+            area.clear()
+
+        }
 
     }
 
@@ -203,6 +207,8 @@ class LocalManager {
 
     destroyEntity(entity: Entity) {
 
+        entity.exists = false
+
         entity.components.forEach(component => {
 
             component.destroy()
@@ -218,6 +224,12 @@ class LocalManager {
             }
 
         })
+
+    }
+
+    getAreaOfEntity(entity: Entity) {
+
+        
 
     }
 

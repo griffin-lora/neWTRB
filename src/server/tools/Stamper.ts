@@ -43,6 +43,8 @@ export default class Stamper extends Tool {
                 })
                 
                 const entity = localManager.createEntity(entityDatum)
+                
+                this.fire(player)
 
                 if (settings.restricted) {
 

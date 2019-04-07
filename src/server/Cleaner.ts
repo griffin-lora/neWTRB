@@ -2,10 +2,10 @@ import { RunService } from "rbx-services"
 import { localManager } from "./localManager"
 import { Entity } from "./Entity"
 
-export class HelperBot {
+export class Cleaner {
 
     constructor() {
-
+        
         RunService.Stepped.Connect(() => {
 
             let areaEntities = new Array<Entity>()

@@ -2,6 +2,7 @@ import { EntityDatum, ComponentDatum } from "../shared/settings"
 import { RunService, Workspace, ReplicatedStorage } from "rbx-services"
 import Stamper from "./tools/Stamper"
 import { mouse } from "./player"
+import { RenderProps } from "../server/components/Render"
 const JointsService = game.GetService("JointsService")
 const camera = Workspace.CurrentCamera
 const previewMathModule = ReplicatedStorage.client.previewMath as ModuleScript
@@ -13,13 +14,6 @@ export interface PreviewMath {
 }
 
 const previewMath = require(previewMathModule) as PreviewMath
-
-export interface RenderProps {
-
-    model: Model
-
-}
-
 /*
 export class Collision {
 
@@ -69,7 +63,7 @@ export class Preview {
             const props = renderSetting.props as RenderProps
 
             this.model = props.model.Clone()
-            this.model.Parent = Workspace
+
             this.model.GetDescendants().forEach(descendant => {
 
                 if (descendant.IsA("BasePart")) {
@@ -84,7 +78,7 @@ export class Preview {
 
                     descendant.BottomSurface = Enum.SurfaceType.Smooth
 
-                } else if (descendant.IsA("Texture")) {
+                } else if (descendant.IsA("Decal")) {
 
                     if (descendant.Transparency !== 1) {
 
@@ -96,6 +90,9 @@ export class Preview {
 
             })
             
+
+            this.model.Parent = Workspace
+
             mouse.TargetFilter = this.model
             this.moveConnection = RunService.RenderStepped.Connect(() => {
 
@@ -427,7 +424,17 @@ export class Preview {
 
             const primaryPart = this.model.PrimaryPart as BasePart
 
-            return previewMath.findConfigAtMouseTarget([primaryPart])
+            const config = previewMath.findConfigAtMouseTarget([primaryPart])
+
+            if (config) {
+
+                return config
+
+            } else {
+
+                return new CFrame()
+
+            }
             
         } else {
 

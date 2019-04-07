@@ -22,15 +22,15 @@ export class CategoryButton extends Roact.Component {
     render() {
 
         const props = this.props as CategoryButtonProps
-
-        return <textbutton Ref={this.ref} Key="setButton" Text={props.name} Position={new UDim2(0, 5, 0, 18)} Size={new UDim2(1, -5, 0, 18)} BackgroundTransparency={1} BackgroundColor3={Color3.fromRGB(255, 255, 255)} BorderSizePixel={0} AutoButtonColor={false} TextWrapped={true} TextXAlignment={Enum.TextXAlignment.Left} TextColor3={Color3.fromRGB(255, 255, 255)} TextSize={18} Font={Enum.Font.Arial} Event={{
+        
+        return <textbutton Ref={this.ref} Text={props.name} Position={new UDim2(0, 5, 0, 18)} Size={new UDim2(1, -5, 0, 18)} BackgroundTransparency={1} BackgroundColor3={Color3.fromRGB(255, 255, 255)} BorderSizePixel={0} AutoButtonColor={false} TextWrapped={true} TextXAlignment={Enum.TextXAlignment.Left} TextColor3={Color3.fromRGB(255, 255, 255)} TextSize={18} Font={Enum.Font.Arial} Event={{
             MouseButton1Click: () => {
 
                 props.stamper.setCategory(props.name)
 
             },
             MouseEnter: button => {
-
+                
                 if (props.stamper.categoryName !== props.name) {
                     
                     button.BackgroundTransparency = 0

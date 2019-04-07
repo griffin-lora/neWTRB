@@ -1,7 +1,7 @@
 import { Component } from "../Component"
 import { Entity } from "../Entity"
 import Render, { RenderProps } from "./Render"
-import { Workspace } from "rbx-services"
+import { Workspace, Players } from "rbx-services"
 
 const entities = Workspace.entities as Folder
 const map = Workspace.map as Folder
@@ -22,7 +22,7 @@ export class Collision {
 
         Workspace.GetChildren().forEach(child => {
             
-            if (child.IsA("PVInstance")) {
+            if (child.IsA("Model") && Players.GetPlayerFromCharacter(child)) {
 
                 ignoreList.push(child)
 

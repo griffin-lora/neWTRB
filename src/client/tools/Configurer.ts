@@ -66,6 +66,16 @@ export default class Configurer extends Tool {
 
         })
 
+        RunService.RenderStepped.Connect(() => {
+
+            this.configEntities.forEach(configEntity => {
+
+                configEntity.selectionBox.Visible = this.equipped
+    
+            })
+
+        })
+
         mouse.Button1Up.Connect(() => {
 
             const configEntity = this.getSelected()
@@ -286,24 +296,12 @@ export default class Configurer extends Tool {
     equip() {
 
         super.equip()
-
-        this.configEntities.forEach(configEntity => {
-
-            configEntity.selectionBox.Visible = true
-
-        })
         
     }
 
     unequip() {
 
         super.unequip()
-
-        this.configEntities.forEach(configEntity => {
-
-            configEntity.selectionBox.Visible = false
-
-        })
 
         this.configEntity = undefined
 

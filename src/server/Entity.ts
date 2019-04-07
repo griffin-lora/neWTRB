@@ -11,5 +11,6 @@ export class Entity {
 
     components = new Map<typeof Component, Component>()
     entityDatum: EntityDatum
+    exists = true
 
 }

@@ -4,9 +4,7 @@ import Render, { RenderProps } from "../components/Render"
 import { settings } from "../../shared/settings"
 import { globalManager } from "../../shared/globalManager"
 import Config, { ConfigProps, NumberConstrainedData } from "../components/Config"
-import { Unknown } from "../../shared/Unknown"
-import inspect from "rbx-inspect";
-import { TextService } from "rbx-services";
+import { TextService } from "rbx-services"
 
 export default class Configurer extends Tool {
     

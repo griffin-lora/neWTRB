@@ -31,7 +31,7 @@ export class Remote {
     }
 
     event(event: (...args: unknown[]) => void) {
-
+        
         this.events.push(event)
 
     }

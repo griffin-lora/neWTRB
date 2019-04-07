@@ -3,7 +3,7 @@ import { ReplicatedStorage } from "rbx-services"
 const remoteEvent = ReplicatedStorage.remoteEvent as RemoteEvent
 
 const resetInterval = 1
-const maxTimesFired = 20
+const maxTimesFired = 45
 
 export class Remote {
 

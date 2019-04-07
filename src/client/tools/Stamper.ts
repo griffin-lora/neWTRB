@@ -1,13 +1,14 @@
 import { Tool } from "../Tool"
 import * as Roact from "rbx-roact"
 import { StamperGui } from "../components/StamperGui"
-import { Players, UserInputService, RunService } from "rbx-services"
+import { Players, UserInputService, RunService, Workspace } from "rbx-services"
 import { stamperMode } from "../enum"
 import { Preview } from "../Preview"
 import { playerGui, mouse } from "../player"
 import { localManager } from "../localManager"
 import { globalManager } from "../../shared/globalManager"
 import { EntityDatum, settings } from "../../shared/settings"
+import { RenderProps } from "../../server/components/Render"
 
 export default class Stamper extends Tool {
     
@@ -84,7 +85,36 @@ export default class Stamper extends Tool {
         
         if (valid) {
 
+            let model: Model | undefined
+
+            this.remote.event(() => {
+
+                if (model) {
+                    
+                    model.Destroy()
+
+                    this.remote.clear()
+
+                }
+
+            })
+            
             this.fire(entityDatum.name, cframe)
+
+            entityDatum.components.forEach(componentDatum => {
+
+                if (componentDatum.name === "Render") {
+
+                    const props = componentDatum.props as RenderProps
+
+                    model = props.model.Clone()
+
+                    model.SetPrimaryPartCFrame(cframe)
+                    model.Parent = Workspace
+
+                }
+
+            })
 
         }
 
@@ -106,7 +136,15 @@ export default class Stamper extends Tool {
 
         })
 
+        this.page = 0
+
         this.category = category
+
+    }
+
+    setPage(page: number) {
+
+        this.page = page
 
     }
 
@@ -116,5 +154,6 @@ export default class Stamper extends Tool {
     gui: Roact.Element
     categoryName = ""
     category = new Array<EntityDatum>()
+    page = 0
 
 }
