@@ -3,6 +3,7 @@ import { getEntityDatum, settings } from "../../shared/settings"
 import { localManager } from "../localManager"
 import Render, { RenderProps } from "../components/Render"
 import { globalManager } from "../../shared/globalManager"
+import { placementType } from "../../shared/enum"
 
 export default class Stamper extends Tool {
     
@@ -12,57 +13,133 @@ export default class Stamper extends Tool {
 
     }
 
-    event(player: Player, name: unknown, cframe: unknown, ...args: unknown[]) {
+    event(player: Player, receivedPlacementType: number, ...args: unknown[]) {
 
-        super.event(player, name, cframe, ...args)
-        
-        if (typeIs(name, "string") && typeIs(cframe, "CFrame")) {
+        super.event(player, ...args)
 
-            let valid = true
-
-            if (settings.restricted) {
-
-                const area = localManager.getAreaByPlayer(player)
-
-                valid = globalManager.isInArea(area.model, cframe)
-
-            }
+        if (typeIs(receivedPlacementType, "number") && receivedPlacementType === placementType.name) {
             
-            if (valid) {
-                
-                const entityDatum = getEntityDatum(name)
+            const [ name, cframe ] = [ ...args ]
 
-                entityDatum.components.forEach(componentDatum => {
+            if (typeIs(name, "string") && typeIs(cframe, "CFrame")) {
 
-                    if (componentDatum.name === "Render") {
-
-                        componentDatum.props.cframe = cframe
-
-                    }
-
-                })
-                
-                const entity = localManager.createEntity(entityDatum)
-                
-                this.fire(player)
+                let valid = true
 
                 if (settings.restricted) {
 
                     const area = localManager.getAreaByPlayer(player)
+
+                    valid = globalManager.isInArea(area.model, cframe)
+
+                }
+                
+                if (valid) {
                     
-                    area.save()
+                    const entityDatum = getEntityDatum(name)
+
+                    entityDatum.components.forEach(componentDatum => {
+
+                        if (componentDatum.name === "Render") {
+
+                            componentDatum.props.cframe = cframe
+
+                        }
+
+                    })
+                    
+                    const entity = localManager.createEntity(entityDatum)
+                    
+                    this.fire(player)
+
+                    if (settings.restricted) {
+
+                        const area = localManager.getAreaByPlayer(player)
+                        
+                        area.save()
+
+                    }
+
+                } else {
+
+                    throw "attempt to place outside of building area."
 
                 }
 
             } else {
 
-                throw "attempt to place outside of building area."
+                throw "attempt to fire remote with invalid types."
+
+            }
+
+        } else if (receivedPlacementType === placementType.id) {
+
+            const [ id, cframe ] = [ ...args ]
+
+            if (typeIs(id, "string") && typeIs(cframe, "CFrame")) {
+
+                let valid = true
+
+                if (settings.restricted) {
+
+                    const area = localManager.getAreaByPlayer(player)
+
+                    valid = globalManager.isInArea(area.model, cframe)
+
+                }
+                
+                if (valid) {
+
+                    const entity = localManager.getEntityById(id)
+
+                    const entityDatum = localManager.clone(entity.entityDatum)
+
+                    entityDatum.components.forEach((componentDatum, index) => {
+
+                        if (componentDatum.name === "Core") {
+
+                            entityDatum.components.remove(index)
+
+                        }
+
+                    })
+
+                    entityDatum.components.forEach(componentDatum => {
+
+                        if (componentDatum.name === "Render") {
+
+                            componentDatum.props.cframe = cframe
+
+                        }
+
+                    })
+
+                    const clone = localManager.createEntity(entityDatum)
+                    
+                    this.fire(player)
+
+                    if (settings.restricted) {
+
+                        const area = localManager.getAreaByPlayer(player)
+                        
+                        area.save()
+
+                    }
+
+                } else {
+
+                    throw "attempt to place outside of building area."
+
+                }
+
+            } else {
+
+                throw "attempt to fire remote with invalid types."
 
             }
 
         } else {
 
-            throw "attempt to fire remote with invalid types."
+            throw "attempt to use an invalid PlacementType."
 
         }
 

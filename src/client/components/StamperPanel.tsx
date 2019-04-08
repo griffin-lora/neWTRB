@@ -1,6 +1,6 @@
 import * as Roact from "rbx-roact"
 import Stamper from "../tools/Stamper"
-import { stamperMode } from "../enum"
+import { stamperMode } from "../../shared/enum"
 import { RunService } from "rbx-services"
 
 export interface StamperPanelProps {

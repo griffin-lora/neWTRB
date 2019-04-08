@@ -1,6 +1,7 @@
 import * as Roact from "rbx-roact"
 import Stamper from "../tools/Stamper"
 import { getEntityDatum } from "../../shared/settings"
+import { placementType } from "../../shared/enum"
 
 export interface EntityButtonProps {
 
@@ -37,7 +38,7 @@ export class EntityButton extends Roact.Component {
             <textbutton Key="button" Text="" Position={new UDim2(0.025, 0, 0.025, 0)} Size={new UDim2(0.95, 0, 0.95, 0)} Style={Enum.ButtonStyle.RobloxButton} TextTransparency={0.1} BorderSizePixel={0} BackgroundColor3={Color3.fromRGB(71, 71, 71)} BackgroundTransparency={0.1} Event={{
                 MouseButton1Click: () => {
 
-                    props.stamper.startPlacing(getEntityDatum(props.name))
+                    props.stamper.startPlacing(placementType.name, getEntityDatum(props.name))
                     
                 },
                 MouseEnter: () => {

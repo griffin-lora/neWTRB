@@ -2,7 +2,6 @@ import * as Roact from "rbx-roact"
 import { Tool } from "../Tool"
 import Stamper from "../tools/Stamper"
 import { RunService, UserInputService } from "rbx-services"
-import { stamperMode } from "../enum"
 import { settings, getEntityDatum } from "../../shared/settings"
 import { CategoryButton } from "./CategoryButton"
 import { EntityButton } from "./EntityButton";
@@ -43,7 +42,7 @@ export class InsertPanel extends Roact.Component {
 
         return <frame Ref={this.ref} Key="insertPanel" Active={true} Position={new UDim2(0.2, 2, 0.1, 24)} Size={new UDim2(0.6, -20, 0.64, 0)} Style={Enum.FrameStyle.RobloxRound}>
             <frame Ref={this.entitiesFrameRef} Key="entitiesFrame" Position={new UDim2(0.24, 0, 0.085, 0)} Size={new UDim2(0.54, 0, 0.8, 0)} ClipsDescendants={true} BorderSizePixel={0} BackgroundTransparency={1}>
-                <uigridlayout CellPadding={new UDim2(0, 0, 0, 0)} CellSize={new UDim2(0, 64, 0, 64)}/>
+                <uigridlayout SortOrder={Enum.SortOrder.LayoutOrder} CellPadding={new UDim2(0, 0, 0, 0)} CellSize={new UDim2(0, 64, 0, 64)}/>
             </frame>
             <textbutton Key="cancelButton" Text="" Position={new UDim2(1, -32, 0, -2)} Size={new UDim2(0, 34, 0, 34)} Style={Enum.ButtonStyle.RobloxButtonDefault} TextSize={24} TextColor3={Color3.fromRGB(255, 255, 255)} Font={Enum.Font.ArialBold} Event={{
                 MouseButton1Click: () => {

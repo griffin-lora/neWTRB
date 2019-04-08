@@ -95,7 +95,7 @@ class LocalManager {
         this.entities.push(entity)
 
         let hasCore = false
-
+        
         entityDatum.components.forEach(componentDatum => {
 
             if (componentDatum.name === "Core") {

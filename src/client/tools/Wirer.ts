@@ -4,7 +4,7 @@ import { localManager } from "../localManager"
 import { globalManager } from "../../shared/globalManager"
 import { EntityDatum, ComponentDatum } from "../../shared/settings";
 import { Remote } from "../Remote"
-import { wirerMode } from "../enum"
+import { wirerMode } from "../../shared/enum"
 import { mouse, playerGui, getCharacter } from "../player"
 import { Selector } from "./Selector"
 

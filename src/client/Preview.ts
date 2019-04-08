@@ -3,6 +3,7 @@ import { RunService, Workspace, ReplicatedStorage } from "rbx-services"
 import Stamper from "./tools/Stamper"
 import { mouse } from "./player"
 import { RenderProps } from "../server/components/Render"
+import { placementType, stamperMode } from "../shared/enum"
 const JointsService = game.GetService("JointsService")
 const camera = Workspace.CurrentCamera
 const previewMathModule = ReplicatedStorage.client.previewMath as ModuleScript
@@ -44,26 +45,26 @@ export class Collision {
 
 export class Preview {
 
-    constructor(stamper: Stamper, previewSetting: EntityDatum) {
+    constructor(stamper: Stamper, receivedPlacementType: number, previewDatum: EntityDatum) {
         
-        let renderSetting: ComponentDatum | undefined
+        let renderDatum: ComponentDatum | undefined
 
-        previewSetting.components.forEach(componentDatum => {
+        previewDatum.components.forEach(componentDatum => {
 
             if (componentDatum.name === "Render") {
 
-                renderSetting = componentDatum
+                renderDatum = componentDatum
 
             }
 
         })
         
-        if (renderSetting) {
+        if (renderDatum) {
 
-            const props = renderSetting.props as RenderProps
+            const props = renderDatum.props as RenderProps
 
             this.model = props.model.Clone()
-
+            
             this.model.GetDescendants().forEach(descendant => {
 
                 if (descendant.IsA("BasePart")) {
@@ -92,7 +93,7 @@ export class Preview {
             
 
             this.model.Parent = Workspace
-
+            
             mouse.TargetFilter = this.model
             this.moveConnection = RunService.RenderStepped.Connect(() => {
 
@@ -100,7 +101,7 @@ export class Preview {
                 
                 if (this.model) {
                     
-                    if (stamper.equipped && !stamper.inserting) {
+                    if (stamper.equipped && stamper.mode === stamperMode.placing && !stamper.inserting) {
 
                         this.model.Parent = Workspace
 
@@ -144,9 +145,9 @@ export class Preview {
 
             this.buttonConnection = mouse.Button1Up.Connect(() => {
                 
-                if (stamper.equipped && !stamper.inserting) {
-
-                    stamper.place(previewSetting, this.getHitCframe())
+                if (stamper.equipped && stamper.mode === stamperMode.placing && !stamper.inserting) {
+                    
+                    stamper.place(receivedPlacementType, previewDatum, this.getHitCframe())
                     
                 }
 
