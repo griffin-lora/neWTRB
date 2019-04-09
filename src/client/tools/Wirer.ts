@@ -184,15 +184,9 @@ export default class Wirer extends Tool {
 
         if (model.IsA("Model") && model.Parent) {
 
-            let valid = true
-
             const primaryPart = model.PrimaryPart as BasePart
 
-            if (localManager.area) {
-
-                valid = globalManager.isInArea(localManager.area, primaryPart.CFrame)
-
-            }
+            let valid = localManager.isValid(primaryPart.CFrame)
 
             if (valid) {
 

@@ -26,27 +26,13 @@ export default class Deleter extends Tool {
 
                 const props = render.props as RenderProps
 
-                let valid = true
-
-                if (settings.restricted) {
-
-                    const area = localManager.getAreaByPlayer(player)
-
-                    valid = globalManager.isInArea(area.model, props.cframe)
-
-                }
+                let valid = localManager.isValid(props.cframe, player)
 
                 if (valid) {
 
                     localManager.destroyEntity(entity)
 
-                    if (settings.restricted) {
-
-                        const area = localManager.getAreaByPlayer(player)
-                        
-                        area.save()
-
-                    }
+                    localManager.save(player)
 
                 } else {
 

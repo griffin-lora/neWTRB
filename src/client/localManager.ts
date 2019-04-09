@@ -6,6 +6,7 @@ import { ReplicatedStorage } from "rbx-services"
 import { Export } from "../shared/Export"
 import { Tool } from "./Tool"
 import { Remote } from "./Remote"
+import { globalManager } from "../shared/globalManager"
 const tools = ReplicatedStorage.client.tools
 
 class LocalManager {
@@ -60,6 +61,20 @@ class LocalManager {
             const tool = this.addTool(new toolClass("", ""))
 
         })*/
+
+    }
+
+    isValid(cframe: CFrame) {
+
+        if (this.area) {
+
+            return globalManager.isInArea(this.area, cframe)
+
+        } else {
+
+            return true
+
+        }
 
     }
 

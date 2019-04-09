@@ -13,14 +13,14 @@ export default class Trapdoor extends Component {
     constructor(entity: Entity, props: TrapdoorProps) {
 
         super(entity, props)
-
+        
         const render = (entity.components.get(Render) as Render) || undefined
 
         if (render) {
 
             const model = render.model
 
-            const door = model.PrimaryPart as BasePart
+            const door = model.Head as BasePart
 
             let open = false
 

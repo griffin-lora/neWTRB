@@ -158,13 +158,7 @@ export default class Stamper extends Tool {
     
     place(receivedPlacementType: number, entityDatum: EntityDatum, cframe: CFrame) {
 
-        let valid = true
-
-        if (localManager.area) {
-
-            valid = globalManager.isInArea(localManager.area, cframe)
-
-        }
+        let valid = localManager.isValid(cframe)
         
         if (valid) {
 

@@ -1,5 +1,5 @@
 import { EntityDatum, ComponentDatum } from "../shared/settings"
-import { RunService, Workspace, ReplicatedStorage } from "rbx-services"
+import { RunService, Workspace, ReplicatedStorage, UserInputService } from "rbx-services"
 import Stamper from "./tools/Stamper"
 import { mouse } from "./player"
 import { RenderProps } from "../server/components/Render"
@@ -96,7 +96,7 @@ export class Preview {
             
             mouse.TargetFilter = this.model
             this.moveConnection = RunService.RenderStepped.Connect(() => {
-
+                
                 this.setCframe(this.getHitCframe())
                 
                 if (this.model) {
@@ -152,6 +152,17 @@ export class Preview {
                 }
 
             })
+
+            this.rotationConnection = UserInputService.InputBegan.Connect(input => {
+
+                if (input.KeyCode === Enum.KeyCode.R) {
+
+                    this.rotation += 1
+                    this.rotation %= 4
+
+                }
+
+            })
             
         }
 
@@ -183,10 +194,11 @@ export class Preview {
 
     destroy() {
 
-        if (this.moveConnection && this.buttonConnection && this.model) {
+        if (this.moveConnection && this.buttonConnection && this.rotationConnection && this.model) {
 
             this.moveConnection.Disconnect()
             this.buttonConnection.Disconnect()
+            this.rotationConnection.Disconnect()
             this.model.Destroy()
             JointsService.ClearJoinAfterMoveJoints()
 
@@ -196,6 +208,8 @@ export class Preview {
 
     moveConnection: RBXScriptConnection | undefined
     buttonConnection: RBXScriptConnection | undefined
+    rotationConnection: RBXScriptConnection | undefined
+    rotation = 0
     
 /*
     getCollisions() {
@@ -423,9 +437,13 @@ export class Preview {
 
         if (this.model) {
 
-            const primaryPart = this.model.PrimaryPart as BasePart
+            const newModel = this.model.Clone()
 
-            const config = previewMath.findConfigAtMouseTarget([primaryPart])
+            newModel.SetPrimaryPartCFrame(new CFrame(this.model.GetPrimaryPartCFrame().Position).mul(CFrame.Angles(0, math.rad(this.rotation * 90), 0)))
+
+            const primaryPart = newModel.PrimaryPart as BasePart
+            
+            let config = previewMath.findConfigAtMouseTarget([primaryPart])
 
             if (config) {
 

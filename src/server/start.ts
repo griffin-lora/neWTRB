@@ -37,7 +37,7 @@ getEntityDatumRemote.event((player, id: unknown, ...args) => {
     
     if (typeIs(id, "string")) {
 
-        const entity = localManager.getEntityById(id) // CAUSES AN ERROR SOMETIMES.
+        const entity = localManager.getEntityById(id)
 
         const entityDatum = entity.entityDatum
         
@@ -54,6 +54,12 @@ getEntityDatumRemote.event((player, id: unknown, ...args) => {
 if (settings.restricted) {
 
     const cleaner = new Cleaner()
+
+}
+
+if (!settings.restricted && settings.saves) {
+
+    localManager.load()
 
 }
 

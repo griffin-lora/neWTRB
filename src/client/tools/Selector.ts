@@ -82,15 +82,9 @@ export class Selector extends Tool {
             
             if (model && model.IsA("Model") && model.Parent === entities) {
 
-                let valid = true
-
                 const primaryPart = model.PrimaryPart as BasePart
 
-                if (localManager.area) {
-
-                    valid = globalManager.isInArea(localManager.area, primaryPart.CFrame)
-
-                }
+                let valid = localManager.isValid(primaryPart.CFrame)
 
                 if (valid) {
 

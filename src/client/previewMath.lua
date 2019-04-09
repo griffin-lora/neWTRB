@@ -173,7 +173,7 @@ function findConfigAtMouseTarget(partsTable)
     else
         insertCFrame = partsTable[1].CFrame
     end
-
+    
     if not true and Mouse then
         if partsTable[1]:IsA("Tool") then Mouse.TargetFilter = partsTable[1].Handle
         else Mouse.TargetFilter = partsTable[1] end
@@ -184,6 +184,10 @@ function findConfigAtMouseTarget(partsTable)
 
     if not success or targetPart == nil then
         return admissibleConfig, targetConfig
+    end
+
+    if targetPart.Parent and targetPart.Parent:IsA("Model") and targetPart.Parent.Parent == workspace.entities then
+        targetPart = targetPart.Parent:GetChildren()[1]
     end
 
     -- test mouse hit location

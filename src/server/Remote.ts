@@ -48,19 +48,18 @@ export class Remote {
                 })
                 
                 this.events.forEach(event => {
-                    event(player, ...args)
-                    /*const [ success, message ] = pcall(() => {
+                    
+                    const [ success, message ] = pcall(() => {
                         
                         event(player, ...args)
 
                     })
                     
                     if (!success) {
-
+                        
                         player.Kick(`Caused a server error. Error is: ${ message }`)
-                        throw `${ player.Name } caused a server error. Error is ${ message }`
 
-                    }*/
+                    }
         
                 })
                 

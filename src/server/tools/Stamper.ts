@@ -23,15 +23,7 @@ export default class Stamper extends Tool {
 
             if (typeIs(name, "string") && typeIs(cframe, "CFrame")) {
 
-                let valid = true
-
-                if (settings.restricted) {
-
-                    const area = localManager.getAreaByPlayer(player)
-
-                    valid = globalManager.isInArea(area.model, cframe)
-
-                }
+                let valid = localManager.isValid(cframe, player)
                 
                 if (valid) {
                     
@@ -51,13 +43,7 @@ export default class Stamper extends Tool {
                     
                     this.fire(player)
 
-                    if (settings.restricted) {
-
-                        const area = localManager.getAreaByPlayer(player)
-                        
-                        area.save()
-
-                    }
+                    localManager.save(player)
 
                 } else {
 
@@ -77,16 +63,8 @@ export default class Stamper extends Tool {
 
             if (typeIs(id, "string") && typeIs(cframe, "CFrame")) {
 
-                let valid = true
+                let valid = localManager.isValid(cframe, player)
 
-                if (settings.restricted) {
-
-                    const area = localManager.getAreaByPlayer(player)
-
-                    valid = globalManager.isInArea(area.model, cframe)
-
-                }
-                
                 if (valid) {
 
                     const entity = localManager.getEntityById(id)
@@ -117,13 +95,7 @@ export default class Stamper extends Tool {
                     
                     this.fire(player)
 
-                    if (settings.restricted) {
-
-                        const area = localManager.getAreaByPlayer(player)
-                        
-                        area.save()
-
-                    }
+                    localManager.save(player)
 
                 } else {
 

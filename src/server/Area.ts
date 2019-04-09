@@ -1,6 +1,6 @@
 import { ReplicatedStorage, Workspace } from "rbx-services"
 import { settings, EntityDatum, ComponentDatum } from "../shared/settings"
-import { localManager } from "./localManager"
+import { localManager, Save, SaveSerialized } from "./localManager"
 import Render, { RenderProps } from "./components/Render"
 import { globalManager } from "../shared/globalManager"
 import * as DataStore2 from "rbx-datastore2"
@@ -11,38 +11,6 @@ import { Entity } from "./Entity"
 
 const model = ReplicatedStorage.assets.area
 const areas = Workspace.areas
-
-export interface Save {
-
-    entities: Array<EntityDatum>
-
-}
-
-export interface Serialized {
-
-    type: string
-    value: unknown
-    
-}
-
-export interface ComponentDatumSerialized {
-
-    name: string
-    props: Unknown<unknown>
-
-}
-
-export interface EntityDatumSerialized {
-
-    components: Array<ComponentDatumSerialized>
-    
-}
-
-export interface SaveSerialized {
-
-    entities: Array<EntityDatumSerialized>
-
-}
 
 export class Area {
 
@@ -103,173 +71,14 @@ export class Area {
         return save
 
     }
-
-    getPath(instance: Instance | undefined, path: Array<string>): Array<string> {
-
-        if (instance && instance !== game) {
-
-            path.unshift(instance.Name)
-
-            return this.getPath(instance.Parent, path)
-
-        } else {
-
-            return path
-
-        }
-
-    }
-
-    serialize(save: Save) {
-
-        const saveSerialized = { entities: [] } as SaveSerialized
-
-        save.entities.forEach(entityDatum => {
-
-            const entityDatumSerialized = { components: [] } as EntityDatumSerialized
-            
-            entityDatum.components.forEach(componentDatum => {
-
-                const componentDatumSerialized = { name: componentDatum.name, props: {} as Unknown<unknown> } as ComponentDatumSerialized
-
-                const entries = Object.entries(componentDatum.props)
-
-                entries.forEach(entry => {
-
-                    const key = entry[0]
-                    let value = entry[1]
-
-                    if (componentDatumSerialized.name === "Render" && key === "cframe" && typeIs(value, "CFrame")) {
-
-                        value = value.sub(this.model.GetPrimaryPartCFrame().Position)
-
-                    }
-
-                    let serialized: Serialized
-                    
-                    if (typeIs(value, "CFrame")) {
-
-                        const components = value.components()
-
-                        serialized = { type: "CFrame", value: components } as Serialized
-
-                    } else if (typeIs(value, "Vector3")) {
-
-                        const components = [ value.X, value.Y, value.Z ]
-
-                        serialized = { type: "Vector3", value: components } as Serialized
-                    
-                    } else if (typeIs(value, "Instance")) {
-
-                        const path = this.getPath(value, new Array<string>())
-
-                        serialized = { type: "Instance", value: path } as Serialized
-                        
-                    } else {
-
-                        serialized = { type: "", value: value } as Serialized
-                        
-                    }
-
-                    componentDatumSerialized.props[key] = serialized
-
-                })
-
-                entityDatumSerialized.components.push(componentDatumSerialized)
-
-            })
-
-            saveSerialized.entities.push(entityDatumSerialized)
-            
-
-        })
-
-        return saveSerialized
-
-    }
-
-    deserialize(saveSerialized: SaveSerialized) {
-
-        const save = { entities: [] } as Save
-
-        saveSerialized.entities.forEach(entityDatumSerialized => {
-
-            const entityDatum = { name: "", displayName: "", smallImage: "", largeImage: "", category: "", components: [] } as EntityDatum
-            
-            entityDatumSerialized.components.forEach(componentDatumSerialized => {
-
-                const componentDatum = { name: componentDatumSerialized.name, props: {} as Unknown<unknown> } as ComponentDatum
-
-                const entries = Object.entries(componentDatumSerialized.props)
-
-                entries.forEach(entry => {
-
-                    const key = entry[0]
-                    const serialized = entry[1] as Serialized
-
-                    let value: unknown
-
-                    if (serialized.type === "CFrame") {
-
-                        const components = serialized.value as Array<number>
-
-                        value = new CFrame(components[0], components[1], components[2], components[3], components[4], components[5], components[6], components[7], components[8], components[9], components[10], components[11])
-
-                    } else if (serialized.type === "Vector3") {
-
-                        const components = serialized.value as Array<number>
-
-                        value = new Vector3(components[0], components[1], components[2])
-
-                    } else if (serialized.type === "Instance") {
-
-                        const path = serialized.value as Array<string>
-
-                        let instance = game as Instance
-
-                        path.forEach(name => {
-
-                            instance = instance[name]
-
-                        })
-
-                        value = instance
-
-                    } else {
-
-                        value = serialized.value
-
-                    }
-
-                    if (componentDatum.name === "Render" && key === "cframe" && typeIs(value, "CFrame")) {
-                        
-                        value = value.add(this.model.GetPrimaryPartCFrame().Position)
-                        
-                    }
-
-                    componentDatum.props[key] = value
-
-                })
-
-                entityDatum.components.push(componentDatum)
-
-            })
-
-            save.entities.push(entityDatum)
-
-        })
-        
-        return save
-
-    }
-
+    
     save() {
 
         if (this.player) {
 
             const dataStore = DataStore2<SaveSerialized>(settings.dataStoreKey, this.player)
 
-            const saveSerialized = this.serialize(this.createSave())
+            const saveSerialized = localManager.serialize(this.createSave(), this.model)
             
             dataStore.Set(saveSerialized)
             
@@ -289,7 +98,7 @@ export class Area {
             
             if (saveSerialized) {
 
-                save = this.deserialize(saveSerialized)
+                save = localManager.deserialize(saveSerialized, this.model)
 
             } else {
 

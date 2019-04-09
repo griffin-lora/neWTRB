@@ -26,15 +26,7 @@ export default class Rotator extends Tool {
 
                 const props = render.props as RenderProps
                 
-                let valid = true
-                
-                if (settings.restricted) {
-
-                    const area = localManager.getAreaByPlayer(player)
-
-                    valid = globalManager.isInArea(area.model, props.cframe)
-
-                }
+                let valid = localManager.isValid(props.cframe, player)
 
                 if (valid) {
 
@@ -67,13 +59,7 @@ export default class Rotator extends Tool {
                     
                     //props.anchored = true
                     
-                    if (settings.restricted) {
-
-                        const area = localManager.getAreaByPlayer(player)
-                        
-                        area.save()
-
-                    }
+                    localManager.save(player)
 
                 } else {
 
