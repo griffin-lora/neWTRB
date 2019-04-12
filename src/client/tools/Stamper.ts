@@ -120,7 +120,7 @@ export default class Stamper extends Tool {
 
         })
 
-        this.setCategory("Basic Building")
+        this.setCategory(settings.categories[0])
 
     }
 

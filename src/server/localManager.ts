@@ -1,7 +1,7 @@
 import { Area } from "./Area"
 import { EntityDatum, ComponentDatum, settings } from "../shared/settings"
 import { Entity } from "./Entity"
-import { ReplicatedStorage, HttpService, ServerScriptService } from "rbx-services"
+import { ReplicatedStorage, HttpService, ServerScriptService, Workspace } from "rbx-services"
 import { Export } from "../shared/Export"
 import { Component } from "./Component"
 import { Unknown } from "../shared/Unknown"
@@ -10,10 +10,12 @@ import { Remote } from "./Remote"
 import { Tool } from "./Tool"
 import { globalManager } from "../shared/globalManager"
 import { DataStore } from "./DataStore"
+import Render, { RenderProps } from "./components/Render";
 
 const tools = ServerScriptService.server.tools
 
-const components = ServerScriptService.server.components
+const components = ServerScriptService.server.components as Folder
+const entities = Workspace.entities as Folder
 
 const mainStore = new DataStore<SaveSerialized>(settings.dataStoreKey)
 
@@ -238,6 +240,38 @@ class LocalManager {
             throw `invalid entity id. Id is ${ id }`
 
         }
+
+    }
+
+    getEntityByInstance(instance: Instance): Entity | undefined {
+        
+        if (instance.IsDescendantOf(entities)) {
+
+            let actualEntity: Entity | undefined
+
+            this.entities.forEach(entity => {
+
+                const render = entity.components.get(Render) as Render || undefined
+
+                if (render) {
+
+                    const model = render.model
+                    
+                    if (model.IsAncestorOf(instance)) {
+                        
+                        actualEntity = entity
+
+                    }
+
+                }
+
+            })
+
+            return actualEntity
+
+        }
+
+        return undefined
 
     }
 
